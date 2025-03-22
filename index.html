@@ -40,20 +40,21 @@
             <button type="button" onclick="checkAnswer()">Submit</button>
         </form>
         <p id="result"></p>
+        <div id="explanation"></div>
     </div>
 
     <script>
         const questions = [
-            { active: "She writes a letter.", correct: "A letter is written by her.", options: ["A letter writes by her.", "A letter is written by her.", "She is written a letter.", "A letter wrote by her."] },
-            { active: "They built a house.", correct: "A house was built by them.", options: ["A house builds by them.", "A house was built by them.", "A house is built by them.", "They were built a house."] },
-            { active: "The manager will sign the contract.", correct: "The contract will be signed by the manager.", options: ["The contract is signed by the manager.", "The contract will be signed by the manager.", "The contract signs by the manager.", "The contract signed by the manager."] },
-            { active: "The chef is cooking a meal.", correct: "A meal is being cooked by the chef.", options: ["A meal is cooked by the chef.", "A meal is cooking by the chef.", "A meal is being cooked by the chef.", "A meal was being cooked by the chef."] },
-            { active: "She has completed the project.", correct: "The project has been completed by her.", options: ["The project is completed by her.", "The project has been completed by her.", "The project was completed by her.", "The project completed by her."] },
-            { active: "The teacher was explaining the lesson.", correct: "The lesson was being explained by the teacher.", options: ["The lesson is being explained by the teacher.", "The lesson was explained by the teacher.", "The lesson was being explained by the teacher.", "The lesson explains by the teacher."] },
-            { active: "John had finished the report.", correct: "The report had been finished by John.", options: ["The report is finished by John.", "The report had finished by John.", "The report had been finished by John.", "The report was finished by John."] },
-            { active: "They will complete the task tomorrow.", correct: "The task will be completed by them tomorrow.", options: ["The task completes by them tomorrow.", "The task will complete by them tomorrow.", "The task will be completed by them tomorrow.", "The task is completed by them tomorrow."] },
-            { active: "The scientist discovered a new planet.", correct: "A new planet was discovered by the scientist.", options: ["A new planet discovers by the scientist.", "A new planet is discovered by the scientist.", "A new planet was discovered by the scientist.", "A new planet had discovered by the scientist."] },
-            { active: "The company produces innovative gadgets.", correct: "Innovative gadgets are produced by the company.", options: ["Innovative gadgets produce by the company.", "Innovative gadgets are produced by the company.", "Innovative gadgets were produced by the company.", "Innovative gadgets have produced by the company."] }
+            { active: "Tom cleans the house.", correct: "The house is cleaned by Tom.", options: ["The house cleans by Tom.", "The house was cleaned by Tom.", "The house is cleaned by Tom.", "Tom is cleaned the house."], explanation: "Present simple: Subject + is/am/are + past participle." },
+            { active: "They are watching a movie.", correct: "A movie is being watched by them.", options: ["A movie is watching by them.", "A movie is being watched by them.", "A movie was watched by them.", "A movie watched by them."], explanation: "Present continuous: Subject + is/am/are + being + past participle." },
+            { active: "She has written a book.", correct: "A book has been written by her.", options: ["A book has written by her.", "A book was written by her.", "A book has been written by her.", "A book is written by her."], explanation: "Present perfect: Subject + has/have + been + past participle." },
+            { active: "He wrote the report.", correct: "The report was written by him.", options: ["The report wrote by him.", "The report was written by him.", "The report has been written by him.", "The report is written by him."], explanation: "Past simple: Subject + was/were + past participle." },
+            { active: "The workers were painting the bridge.", correct: "The bridge was being painted by the workers.", options: ["The bridge is being painted by the workers.", "The bridge was being painted by the workers.", "The bridge was painted by the workers.", "The bridge had been painted by the workers."], explanation: "Past continuous: Subject + was/were + being + past participle." },
+            { active: "She had finished the assignment.", correct: "The assignment had been finished by her.", options: ["The assignment was finished by her.", "The assignment had been finished by her.", "The assignment has been finished by her.", "The assignment is finished by her."], explanation: "Past perfect: Subject + had + been + past participle." },
+            { active: "They will announce the results tomorrow.", correct: "The results will be announced by them tomorrow.", options: ["The results will announce by them tomorrow.", "The results will be announced by them tomorrow.", "The results are announced by them tomorrow.", "The results have been announced by them tomorrow."], explanation: "Future simple: Subject + will be + past participle." },
+            { active: "She is going to bake a cake.", correct: "A cake is going to be baked by her.", options: ["A cake is going to be bake by her.", "A cake is going to be baked by her.", "A cake is baked by her.", "A cake was going to be baked by her."], explanation: "Future (going to): Subject + is/am/are going to be + past participle." },
+            { active: "They must complete the project.", correct: "The project must be completed by them.", options: ["The project must completed by them.", "The project must be complete by them.", "The project must be completed by them.", "The project is completed by them."], explanation: "Modal verbs: Subject + modal verb + be + past participle." },
+            { active: "The company should deliver the package soon.", correct: "The package should be delivered by the company soon.", options: ["The package should delivered by the company soon.", "The package should be deliver by the company soon.", "The package should be delivered by the company soon.", "The package was delivered by the company soon."], explanation: "Modal verbs: Subject + modal verb + be + past participle." }
         ];
 
         function loadQuestions() {
@@ -71,13 +72,20 @@
 
         function checkAnswer() {
             let score = 0;
+            let explanationHTML = "<h3>Explanation:</h3>";
             questions.forEach((q, index) => {
                 const selected = document.querySelector(`input[name='q${index}']:checked`);
-                if (selected && selected.value === q.correct) {
-                    score++;
+                if (selected) {
+                    if (selected.value === q.correct) {
+                        score++;
+                        explanationHTML += `<p><strong>${q.active}</strong><br>✅ Correct: ${q.correct}<br>${q.explanation}</p>`;
+                    } else {
+                        explanationHTML += `<p><strong>${q.active}</strong><br>❌ Incorrect: ${selected.value}<br>✅ Correct: ${q.correct}<br>${q.explanation}</p>`;
+                    }
                 }
             });
             document.getElementById('result').innerHTML = `You scored ${score} out of ${questions.length}.`;
+            document.getElementById('explanation').innerHTML = explanationHTML;
         }
 
         loadQuestions();
