@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active to Passive Quiz</title>
+    <title>Grammar Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,7 +34,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Convert to Passive Voice</h2>
+        <h2>Grammar Quiz</h2>
         <form id="quizForm">
             <div id="questions"></div>
             <button type="button" onclick="checkAnswer()">Submit</button>
@@ -45,23 +45,36 @@
 
     <script>
         const questions = [
-            { active: "Tom cleans the house.", correct: "The house is cleaned by Tom.", options: ["The house cleans by Tom.", "The house was cleaned by Tom.", "The house is cleaned by Tom.", "Tom is cleaned the house."], explanation: "Present simple: Subject + is/am/are + past participle." },
-            { active: "They are watching a movie.", correct: "A movie is being watched by them.", options: ["A movie is watching by them.", "A movie is being watched by them.", "A movie was watched by them.", "A movie watched by them."], explanation: "Present continuous: Subject + is/am/are + being + past participle." },
-            { active: "She has written a book.", correct: "A book has been written by her.", options: ["A book has written by her.", "A book was written by her.", "A book has been written by her.", "A book is written by her."], explanation: "Present perfect: Subject + has/have + been + past participle." },
-            { active: "He wrote the report.", correct: "The report was written by him.", options: ["The report wrote by him.", "The report was written by him.", "The report has been written by him.", "The report is written by him."], explanation: "Past simple: Subject + was/were + past participle." },
-            { active: "The workers were painting the bridge.", correct: "The bridge was being painted by the workers.", options: ["The bridge is being painted by the workers.", "The bridge was being painted by the workers.", "The bridge was painted by the workers.", "The bridge had been painted by the workers."], explanation: "Past continuous: Subject + was/were + being + past participle." },
-            { active: "She had finished the assignment.", correct: "The assignment had been finished by her.", options: ["The assignment was finished by her.", "The assignment had been finished by her.", "The assignment has been finished by her.", "The assignment is finished by her."], explanation: "Past perfect: Subject + had + been + past participle." },
-            { active: "They will announce the results tomorrow.", correct: "The results will be announced by them tomorrow.", options: ["The results will announce by them tomorrow.", "The results will be announced by them tomorrow.", "The results are announced by them tomorrow.", "The results have been announced by them tomorrow."], explanation: "Future simple: Subject + will be + past participle." },
-            { active: "She is going to bake a cake.", correct: "A cake is going to be baked by her.", options: ["A cake is going to be bake by her.", "A cake is going to be baked by her.", "A cake is baked by her.", "A cake was going to be baked by her."], explanation: "Future (going to): Subject + is/am/are going to be + past participle." },
-            { active: "They must complete the project.", correct: "The project must be completed by them.", options: ["The project must completed by them.", "The project must be complete by them.", "The project must be completed by them.", "The project is completed by them."], explanation: "Modal verbs: Subject + modal verb + be + past participle." },
-            { active: "The company should deliver the package soon.", correct: "The package should be delivered by the company soon.", options: ["The package should delivered by the company soon.", "The package should be deliver by the company soon.", "The package should be delivered by the company soon.", "The package was delivered by the company soon."], explanation: "Modal verbs: Subject + modal verb + be + past participle." }
+            // Each of / Some of / Every / etc.
+            { sentence: "Each of the students ___ completed their homework.", correct: "has", options: ["have", "has", "is", "are"], explanation: "'Each of' is singular, so we use 'has'." },
+            { sentence: "Some of the water ___ spilled on the floor.", correct: "has", options: ["has", "have", "is", "are"], explanation: "'Water' is uncountable, so we use 'has'." },
+            { sentence: "Every student and teacher ___ present today.", correct: "is", options: ["is", "are", "was", "were"], explanation: "'Every' makes the subject singular, so we use 'is'." },
+            { sentence: "Somebody ___ left their bag here.", correct: "has", options: ["have", "has", "is", "are"], explanation: "'Somebody' is singular, so we use 'has'." },
+            { sentence: "No one of them ___ willing to help.", correct: "is", options: ["is", "are", "has", "have"], explanation: "'No one' is singular, so we use 'is'." },
+            { sentence: "Both of the players ___ ready for the match.", correct: "are", options: ["is", "are", "was", "were"], explanation: "'Both' is plural, so we use 'are'." },
+            { sentence: "Neither my brother nor my sister ___ coming to the party.", correct: "is", options: ["is", "are", "was", "were"], explanation: "'Neither… nor' follows the closest noun rule, so we use 'is'." },
+            { sentence: "Either the teacher or the students ___ responsible for the mess.", correct: "are", options: ["is", "are", "was", "were"], explanation: "'Either… or' follows the closest noun rule, and 'students' is plural, so we use 'are'." },
+            { sentence: "Each of the books ___ on the table.", correct: "is", options: ["is", "are", "was", "were"], explanation: "'Each of' is singular, so we use 'is'." },
+            { sentence: "Neither of the solutions ___ effective.", correct: "was", options: ["was", "were", "has", "have"], explanation: "'Neither of' is singular, so we use 'was'." },
+
+            // Sentence types (Simple / Compound / Complex)
+            { sentence: "She finished her work and went home.", correct: "Compound", options: ["Simple", "Compound", "Complex"], explanation: "It has two independent clauses joined by 'and', so it is compound." },
+            { sentence: "Although it was raining, we went outside.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent clause and a dependent clause, making it complex." },
+            { sentence: "John runs every morning.", correct: "Simple", options: ["Simple", "Compound", "Complex"], explanation: "It has one independent clause, so it is simple." },
+            { sentence: "She studied hard because she wanted to pass the exam.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent and a dependent clause, making it complex." },
+            { sentence: "I wanted to go to the beach, but it was too cold.", correct: "Compound", options: ["Simple", "Compound", "Complex"], explanation: "It has two independent clauses joined by 'but', making it compound." },
+            { sentence: "After he finished his homework, he watched TV.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent and a dependent clause, making it complex." },
+            { sentence: "She likes to read novels and watch movies.", correct: "Simple", options: ["Simple", "Compound", "Complex"], explanation: "It has one independent clause with a compound verb, making it simple." },
+            { sentence: "We went to the park; it was a beautiful day.", correct: "Compound", options: ["Simple", "Compound", "Complex"], explanation: "It has two independent clauses joined by a semicolon, making it compound." },
+            { sentence: "If you study hard, you will pass the test.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent and a dependent clause, making it complex." },
+            { sentence: "I love my dog.", correct: "Simple", options: ["Simple", "Compound", "Complex"], explanation: "It has one independent clause, so it is simple." }
         ];
 
         function loadQuestions() {
             const container = document.getElementById('questions');
             questions.forEach((q, index) => {
-                let questionHTML = `<p><strong>Active:</strong> ${q.active}</p>`;
-                q.options.forEach((option, i) => {
+                let questionHTML = `<p><strong>${q.sentence}</strong></p>`;
+                q.options.forEach(option => {
                     questionHTML += `<label>
                                         <input type="radio" name="q${index}" value="${option}"> ${option}
                                      </label><br>`;
@@ -78,10 +91,8 @@
                 if (selected) {
                     if (selected.value === q.correct) {
                         score++;
-                        explanationHTML += `<p><strong>${q.active}</strong><br>✅ Correct: ${q.correct}<br>${q.explanation}</p>`;
-                    } else {
-                        explanationHTML += `<p><strong>${q.active}</strong><br>❌ Incorrect: ${selected.value}<br>✅ Correct: ${q.correct}<br>${q.explanation}</p>`;
                     }
+                    explanationHTML += `<p><strong>${q.sentence}</strong><br>✅ Correct: ${q.correct}<br>${q.explanation}</p>`;
                 }
             });
             document.getElementById('result').innerHTML = `You scored ${score} out of ${questions.length}.`;
