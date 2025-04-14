@@ -1,105 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar Quiz</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-        }
-        button {
-            margin-top: 10px;
-            padding: 10px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #218838;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Grammar & Vocabulary Test</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      margin: 0;
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: #ffffffee;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #00796b;
+    }
+    .question {
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .question:hover {
+      background-color: #f1f1f1;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .question p {
+      font-weight: bold;
+    }
+    .options label {
+      display: block;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+    .submit-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 24px;
+      background-color: #00796b;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .submit-btn:hover {
+      background-color: #004d40;
+    }
+    .result {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 30px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Grammar Quiz</h2>
-        <form id="quizForm">
-            <div id="questions"></div>
-            <button type="button" onclick="checkAnswer()">Submit</button>
-        </form>
-        <p id="result"></p>
-        <div id="explanation"></div>
-    </div>
+  <div class="container">
+    <h1>English Test: If & Unless + Vocabulary</h1>
+    <form id="quizForm"></form>
+    <button type="button" class="submit-btn" onclick="submitQuiz()">Submit Answers</button>
+    <div id="result" class="result"></div>
+  </div>
 
-    <script>
-        const questions = [
-            // Each of / Some of / Every / etc.
-            { sentence: "Each of the students ___ completed their homework.", correct: "has", options: ["have", "has", "is", "are"], explanation: "'Each of' is singular, so we use 'has'." },
-            { sentence: "Some of the water ___ spilled on the floor.", correct: "has", options: ["has", "have", "is", "are"], explanation: "'Water' is uncountable, so we use 'has'." },
-            { sentence: "Every student and teacher ___ present today.", correct: "is", options: ["is", "are", "was", "were"], explanation: "'Every' makes the subject singular, so we use 'is'." },
-            { sentence: "Somebody ___ left their bag here.", correct: "has", options: ["have", "has", "is", "are"], explanation: "'Somebody' is singular, so we use 'has'." },
-            { sentence: "No one of them ___ willing to help.", correct: "is", options: ["is", "are", "has", "have"], explanation: "'No one' is singular, so we use 'is'." },
-            { sentence: "Both of the players ___ ready for the match.", correct: "are", options: ["is", "are", "was", "were"], explanation: "'Both' is plural, so we use 'are'." },
-            { sentence: "Neither my brother nor my sister ___ coming to the party.", correct: "is", options: ["is", "are", "was", "were"], explanation: "'Neither… nor' follows the closest noun rule, so we use 'is'." },
-            { sentence: "Either the teacher or the students ___ responsible for the mess.", correct: "are", options: ["is", "are", "was", "were"], explanation: "'Either… or' follows the closest noun rule, and 'students' is plural, so we use 'are'." },
-            { sentence: "Each of the books ___ on the table.", correct: "is", options: ["is", "are", "was", "were"], explanation: "'Each of' is singular, so we use 'is'." },
-            { sentence: "Neither of the solutions ___ effective.", correct: "was", options: ["was", "were", "has", "have"], explanation: "'Neither of' is singular, so we use 'was'." },
+  <script>
+    const grammarQuestions = [
+      {
+        q: "If I see him, I ____ him hello.",
+        a: "will say",
+        options: ["say", "will say", "would say", "said"]
+      },
+      {
+        q: "Unless you start now, you ____ late.",
+        a: "will be",
+        options: ["are", "were", "will be", "would be"]
+      },
+      {
+        q: "If she had called me, I ____ gone.",
+        a: "would have",
+        options: ["will", "would", "would have", "had"]
+      },
+      {
+        q: "If water reaches 0°C, it ____.",
+        a: "freezes",
+        options: ["freeze", "freezes", "froze", "would freeze"]
+      },
+      {
+        q: "You can’t enter unless you ____ a ticket.",
+        a: "have",
+        options: ["had", "have", "has", "having"]
+      },
+      {
+        q: "If I were you, I ____ that job.",
+        a: "would take",
+        options: ["will take", "would take", "take", "took"]
+      },
+      {
+        q: "She will fail the test if she ____ study.",
+        a: "doesn’t",
+        options: ["don’t", "won’t", "doesn’t", "isn’t"]
+      },
+      {
+        q: "Unless we leave now, we ____ the train.",
+        a: "will miss",
+        options: ["miss", "missed", "will miss", "would miss"]
+      },
+      {
+        q: "If I ____ rich, I’d travel the world.",
+        a: "were",
+        options: ["was", "am", "were", "be"]
+      },
+      {
+        q: "If she ____ earlier, she wouldn’t have missed the bus.",
+        a: "had arrived",
+        options: ["arrives", "had arrived", "has arrived", "arrived"]
+      },
+      {
+        q: "If you ____ harder, you would have passed.",
+        a: "had studied",
+        options: ["study", "studied", "had studied", "have studied"]
+      },
+      {
+        q: "I won’t help unless you ____ me the truth.",
+        a: "tell",
+        options: ["told", "tell", "tells", "will tell"]
+      },
+      {
+        q: "If it ____ tomorrow, we’ll cancel the picnic.",
+        a: "rains",
+        options: ["rain", "rains", "rained", "would rain"]
+      },
+      {
+        q: "Unless he apologizes, I ____ forgive him.",
+        a: "won’t",
+        options: ["don’t", "didn’t", "won’t", "wouldn’t"]
+      },
+      {
+        q: "If I had more time, I ____ learn Spanish.",
+        a: "would",
+        options: ["will", "would", "can", "did"]
+      }
+    ];
 
-            // Sentence types (Simple / Compound / Complex)
-            { sentence: "She finished her work and went home.", correct: "Compound", options: ["Simple", "Compound", "Complex"], explanation: "It has two independent clauses joined by 'and', so it is compound." },
-            { sentence: "Although it was raining, we went outside.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent clause and a dependent clause, making it complex." },
-            { sentence: "John runs every morning.", correct: "Simple", options: ["Simple", "Compound", "Complex"], explanation: "It has one independent clause, so it is simple." },
-            { sentence: "She studied hard because she wanted to pass the exam.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent and a dependent clause, making it complex." },
-            { sentence: "I wanted to go to the beach, but it was too cold.", correct: "Compound", options: ["Simple", "Compound", "Complex"], explanation: "It has two independent clauses joined by 'but', making it compound." },
-            { sentence: "After he finished his homework, he watched TV.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent and a dependent clause, making it complex." },
-            { sentence: "She likes to read novels and watch movies.", correct: "Simple", options: ["Simple", "Compound", "Complex"], explanation: "It has one independent clause with a compound verb, making it simple." },
-            { sentence: "We went to the park; it was a beautiful day.", correct: "Compound", options: ["Simple", "Compound", "Complex"], explanation: "It has two independent clauses joined by a semicolon, making it compound." },
-            { sentence: "If you study hard, you will pass the test.", correct: "Complex", options: ["Simple", "Compound", "Complex"], explanation: "It has an independent and a dependent clause, making it complex." },
-            { sentence: "I love my dog.", correct: "Simple", options: ["Simple", "Compound", "Complex"], explanation: "It has one independent clause, so it is simple." }
-        ];
+    const vocabQuestions = [
+      {
+        q: "The book was a beautiful ____ with a happy ending.",
+        a: "fairy tale",
+        options: ["fairy tale", "crowds", "crashed", "popular"]
+      },
+      {
+        q: "He visited a small ____ in the Caribbean.",
+        a: "island",
+        options: ["popular", "ordinary", "island", "in need"]
+      },
+      {
+        q: "There were huge ____ waiting for the concert.",
+        a: "crowds",
+        options: ["crashed", "island", "crowds", "raising money"]
+      },
+      {
+        q: "The event ____ in the main hall.",
+        a: "took place",
+        options: ["took place", "crashed", "in need", "fairy tale"]
+      },
+      {
+        q: "Their car ____ into a tree last night.",
+        a: "crashed",
+        options: ["popular", "crashed", "raising money", "crowds"]
+      },
+      {
+        q: "He’s very ____, everyone knows him!",
+        a: "popular",
+        options: ["ordinary", "popular", "island", "crashed"]
+      },
+      {
+        q: "We’re ____ for the poor.",
+        a: "raising money",
+        options: ["raising money", "crowds", "took place", "in need"]
+      },
+      {
+        q: "She offered help to those ____.",
+        a: "in need",
+        options: ["ordinary", "popular", "in need", "fairy tale"]
+      },
+      {
+        q: "It was just an ____ day.",
+        a: "ordinary",
+        options: ["popular", "ordinary", "raising money", "island"]
+      },
+      {
+        q: "They told us a funny ____.",
+        a: "fairy tale",
+        options: ["crowds", "in need", "fairy tale", "took place"]
+      },
+      {
+        q: "We got stuck because our boat hit an ____.",
+        a: "island",
+        options: ["crowds", "raising money", "island", "crashed"]
+      },
+      {
+        q: "He’s not famous, just an ____ person.",
+        a: "ordinary",
+        options: ["fairy tale", "popular", "ordinary", "crashed"]
+      },
+      {
+        q: "They were ____ for charity.",
+        a: "raising money",
+        options: ["in need", "raising money", "took place", "crashed"]
+      },
+      {
+        q: "The show ____ at 8 PM.",
+        a: "took place",
+        options: ["crowds", "took place", "crashed", "popular"]
+      },
+      {
+        q: "The fans gathered in large ____.",
+        a: "crowds",
+        options: ["popular", "ordinary", "crowds", "fairy tale"]
+      }
+    ];
 
-        function loadQuestions() {
-            const container = document.getElementById('questions');
-            questions.forEach((q, index) => {
-                let questionHTML = `<p><strong>${q.sentence}</strong></p>`;
-                q.options.forEach(option => {
-                    questionHTML += `<label>
-                                        <input type="radio" name="q${index}" value="${option}"> ${option}
-                                     </label><br>`;
-                });
-                container.innerHTML += questionHTML + '<br>';
-            });
-        }
+    const quizForm = document.getElementById("quizForm");
 
-        function checkAnswer() {
-            let score = 0;
-            let explanationHTML = "<h3>Explanation:</h3>";
-            questions.forEach((q, index) => {
-                const selected = document.querySelector(`input[name='q${index}']:checked`);
-                if (selected) {
-                    if (selected.value === q.correct) {
-                        score++;
-                    }
-                    explanationHTML += `<p><strong>${q.sentence}</strong><br>✅ Correct: ${q.correct}<br>${q.explanation}</p>`;
-                }
-            });
-            document.getElementById('result').innerHTML = `You scored ${score} out of ${questions.length}.`;
-            document.getElementById('explanation').innerHTML = explanationHTML;
-        }
+    function renderQuestions(arr, prefix) {
+      arr.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<p>${prefix}${i + 1}. ${q.q}</p>` +
+          q.options.map(opt => `
+            <label><input type="radio" name="${prefix}${i + 1}" value="${opt}"> ${opt}</label>
+          `).join("");
+        quizForm.appendChild(div);
+      });
+    }
 
-        loadQuestions();
-    </script>
+    renderQuestions(grammarQuestions, "g");
+    renderQuestions(vocabQuestions, "v");
+
+    function submitQuiz() {
+      let score = 0;
+      let total = grammarQuestions.length + vocabQuestions.length;
+      let resultText = "";
+
+      function checkAnswers(arr, prefix) {
+        arr.forEach((q, i) => {
+          const name = `${prefix}${i + 1}`;
+          const selected = document.querySelector(`input[name='${name}']:checked`);
+          if (selected) {
+            if (selected.value === q.a) {
+              score++;
+              resultText += `✅ ${name}: Correct!\n`;
+            } else {
+              resultText += `❌ ${name}: Wrong (Correct: ${q.a})\n`;
+            }
+          } else {
+            resultText += `⚠️ ${name}: Not answered (Correct: ${q.a})\n`;
+          }
+        });
+      }
+
+      checkAnswers(grammarQuestions, "g");
+      checkAnswers(vocabQuestions, "v");
+
+      document.getElementById("result").innerText = `${resultText}\n\nYour Score: ${score}/${total}`;
+    }
+  </script>
 </body>
 </html>
