@@ -1,283 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>English Grammar & Vocabulary Test</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #ffffff);
-      margin: 0;
-      padding: 20px;
-      animation: fadeIn 1s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background-color: #ffffffee;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    h1, h2 {
-      text-align: center;
-      color: #00796b;
-    }
-    .question {
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
-    }
-    .question:hover {
-      background-color: #f1f1f1;
-      border-radius: 10px;
-      padding: 10px;
-    }
-    .question p {
-      font-weight: bold;
-    }
-    .options label {
-      display: block;
-      margin-bottom: 5px;
-      cursor: pointer;
-    }
-    .submit-btn {
-      display: block;
-      margin: 30px auto;
-      padding: 12px 24px;
-      background-color: #00796b;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .submit-btn:hover {
-      background-color: #004d40;
-    }
-    .result {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 30px;
-      white-space: pre-wrap;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>امتحان</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; margin: 0; padding: 20px; }
+        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #28a745; padding-bottom: 10px; }
+        .question { margin-bottom: 25px; padding: 15px; border-bottom: 1px solid #eee; }
+        .question p { font-weight: bold; font-size: 1.1em; color: #333; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 8px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        .options li:hover { background: #e2e6ea; }
+        input[type="radio"] { margin-left: 10px; cursor: pointer; }
+        #submit-btn { display: block; width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; margin-top: 20px; }
+        #submit-btn:hover { background: #218838; }
+        #result-box { display: none; margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.3em; }
+        .correct-ans { color: #28a745; font-size: 0.9em; display: none; margin-top: 5px; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>English Test: If & Unless + Vocabulary</h1>
-    <form id="quizForm"></form>
-    <button type="button" class="submit-btn" onclick="submitQuiz()">Submit Answers</button>
-    <div id="result" class="result"></div>
-  </div>
 
-  <script>
-    const grammarQuestions = [
-      {
-        q: "If I see him, I ____ him hello.",
-        a: "will say",
-        options: ["say", "will say", "would say", "said"]
-      },
-      {
-        q: "Unless you start now, you ____ late.",
-        a: "will be",
-        options: ["are", "were", "will be", "would be"]
-      },
-      {
-        q: "If she had called me, I ____ gone.",
-        a: "would have",
-        options: ["will", "would", "would have", "had"]
-      },
-      {
-        q: "If water reaches 0°C, it ____.",
-        a: "freezes",
-        options: ["freeze", "freezes", "froze", "would freeze"]
-      },
-      {
-        q: "You can’t enter unless you ____ a ticket.",
-        a: "have",
-        options: ["had", "have", "has", "having"]
-      },
-      {
-        q: "If I were you, I ____ that job.",
-        a: "would take",
-        options: ["will take", "would take", "take", "took"]
-      },
-      {
-        q: "She will fail the test if she ____ study.",
-        a: "doesn’t",
-        options: ["don’t", "won’t", "doesn’t", "isn’t"]
-      },
-      {
-        q: "Unless we leave now, we ____ the train.",
-        a: "will miss",
-        options: ["miss", "missed", "will miss", "would miss"]
-      },
-      {
-        q: "If I ____ rich, I’d travel the world.",
-        a: "were",
-        options: ["was", "am", "were", "be"]
-      },
-      {
-        q: "If she ____ earlier, she wouldn’t have missed the bus.",
-        a: "had arrived",
-        options: ["arrives", "had arrived", "has arrived", "arrived"]
-      },
-      {
-        q: "If you ____ harder, you would have passed.",
-        a: "had studied",
-        options: ["study", "studied", "had studied", "have studied"]
-      },
-      {
-        q: "I won’t help unless you ____ me the truth.",
-        a: "tell",
-        options: ["told", "tell", "tells", "will tell"]
-      },
-      {
-        q: "If it ____ tomorrow, we’ll cancel the picnic.",
-        a: "rains",
-        options: ["rain", "rains", "rained", "would rain"]
-      },
-      {
-        q: "Unless he apologizes, I ____ forgive him.",
-        a: "won’t",
-        options: ["don’t", "didn’t", "won’t", "wouldn’t"]
-      },
-      {
-        q: "If I had more time, I ____ learn Spanish.",
-        a: "would",
-        options: ["will", "would", "can", "did"]
-      }
+<div class="quiz-container">
+    <h1>اختبار مادة تحليل الصور الفضائية (30 سؤال)</h1>
+    <p style="text-align: center;">بالتوفيق يا <b>باشا</b></p>
+    <hr>
+    <form id="quizForm">
+        <div id="questions-area"></div>
+        <button type="button" id="submit-btn" onclick="checkQuiz()">إرسال الإجابات وحساب الدرجة</button>
+    </form>
+
+    <div id="result-box"></div>
+</div>
+
+<script>
+    const quizData = [
+        { q: "الهدف الأساسي من عملية تحليل الصور الفضائية هو:", a: "ب", options: {أ: "تخزين الصور فقط", ب: "استخراج المعلومات والتفاصيل الهامة بشكل دقيق", ج: "زيادة حجم الصورة الرقمية"} },
+        { q: "الخطوة التي تهدف لضمان دقة البيانات وإزالة التأثيرات هي:", a: "ب", options: {أ: "تحميل الصور", ب: "تصحيح الصورة (إشعاعياً ولونياً)", ج: "تحديد المعالم"} },
+        { q: "تحديد المعالم مثل الغابات يتم باستخدام تقنيات:", a: "ب", options: {أ: "المسح اليدوي", ب: "تعلم الآلة (Machine Learning)", ج: "التصوير التقليدي"} },
+        { q: "المؤشر النباتي (VI) هو تحول طيفي لتعزيز مساهمة:", a: "ب", options: {أ: "رطوبة التربة", ب: "خصائص النباتات والتمثيل الضوئي", ج: "حرارة الجو"} },
+        { q: "مادة الكلوروفيل في النباتات الصحية تقوم بـ:", a: "ب", options: {أ: "عكس الأحمر بقوة", ب: "امتصاص كمية كبيرة من الضوء الأحمر", ج: "امتصاص الـ NIR بالكامل"} },
+        { q: "تتميز النباتات الصحية بـ:", a: "أ", options: {أ: "انعكاس عالٍ جداً في الـ NIR", ب: "انعكاس منخفض في الـ NIR", ج: "امتصاص الـ NIR"} },
+        { q: "العلاقة العكسية في المؤشرات تكون بين:", a: "ب", options: {أ: "الأخضر والأزرق", ب: "الانعكاس الأحمر والـ NIR", ج: "تحت الحمراء والحرارة"} },
+        { q: "يتميز منحنى الماء بامتصاص عالي في نطاق:", a: "ب", options: {أ: "الضوء المرئي", ب: "الأشعة تحت الحمراء وما بعدها", ج: "الأشعة فوق البنفسجية"} },
+        { q: "المياه العكرة لها انعكاس أعلى من المياه النقية في النطاق:", a: "ب", options: {أ: "تحت الأحمر", ب: "المرئي", ج: "الميكروويف"} },
+        { q: "يُستخدم نمط انعكاس الماء للكشف عن:", a: "ب", options: {أ: "الصخور", ب: "الطحالب والتلوث النفطي", ج: "الأسماك"} },
+        { q: "يتم حساب SVI عن طريق المعادلة:", a: "ب", options: {أ: "NIR - R", ب: "NIR / R", ج: "R / NIR"} },
+        { q: "تتراوح قيمة SVI بين:", a: "ب", options: {أ: "-1 إلى 1", ب: "0 إلى 1", ج: "0 إلى 100"} },
+        { q: "من مميزات SVI أنه:", a: "ب", options: {أ: "يزيد التضاريس", ب: "يقلل تأثير العوامل الجوية والتضاريس", ج: "يهمل النباتات"} },
+        { q: "العالم الذي طور مؤشر NDVI هو:", a: "ب", options: {أ: "Deering", ب: "Rouse et al", ج: "Crist"} },
+        { q: "معادلة NDVI هي:", a: "ب", options: {أ: "(NIR+R)/(NIR-R)", ب: "(NIR-R)/(NIR+R)", ج: "NIR/R"} },
+        { q: "في Landsat 8، يمثل Band 5 و Band 4 على التوالي:", a: "ب", options: {أ: "Red و NIR", ب: "NIR و Red", ج: "Green و Blue"} },
+        { q: "قيم NDVI من (-1.0) إلى (0) تمثل:", a: "ب", options: {أ: "غابات", ب: "سحب ومياه وثلوج", ج: "محاصيل"} },
+        { q: "القيم القريبة من الصفر في NDVI تشير لـ:", a: "أ", options: {أ: "تربة عارية وصخور", ب: "شجيرات", ج: "مياه"} },
+        { q: "الغابات الاستوائية تعطي قيم NDVI بين:", a: "ب", options: {أ: "0.2 - 0.3", ب: "0.6 - 1.0", ج: "-0.1 - 0.1"} },
+        { q: "عند إصابة النبات بالجفاف، فإن انعكاس NIR:", a: "ب", options: {أ: "يزداد", ب: "يقل (يمتص أكثر)", ج: "لا يتغير"} },
+        { q: "يستخدم المزارعون NDVI لتحديد احتياجات:", a: "أ", options: {أ: "السماد والري", ب: "نوع التربة", ج: "سرعة الرياح"} },
+        { q: "الهدف من TVI هو:", a: "ب", options: {أ: "زيادة السلبيات", ب: "تجنب القيم السلبية وتعديل التوزيع", ج: "قياس الرطوبة"} },
+        { q: "معادلة TVI تعتمد على NDVI و:", a: "ب", options: {أ: "التربيع", ب: "الجذر التربيعي و 0.5", ج: "اللوغاريتم"} },
+        { q: "تحويل القبعة TCT صمم أصلاً لمجس:", a: "ب", options: {أ: "TM", ب: "MSS", ج: "OLI"} },
+        { q: "مكون السطوع (Brightness) يعكس:", a: "ب", options: {أ: "كثافة الخضرة", ب: "انعكاس التربة والأسطح الجافة", ج: "الماء"} },
+        { q: "المكون الذي يعكس نمو النباتات في TCT هو:", a: "ب", options: {أ: "Wetness", ب: "Greenness", ج: "Noise"} },
+        { q: "في بيانات TM، المحور الثالث يمثل:", a: "ب", options: {أ: "الاصفرار", ب: "الرطوبة (Wetness)", ج: "السطوع"} },
+        { q: "تظهر خصائص التربة في MSS على شكل:", a: "ب", options: {أ: "قبعة", ب: "سحابة بيضاوية", ج: "نقطة"} },
+        { q: "مكون الضوضاء (Noise) يمثل:", a: "ب", options: {أ: "الرطوبة", ب: "بيانات لا تتعلق بالنبات أو التربة", ج: "المباني"} },
+        { q: "الزراعة الدقيقة تستخدم NDVI لـ:", a: "أ", options: {أ: "توفير الوقت وتحديد مناطق المشاكل", ب: "تغيير الألوان فقط", ج: "رصد النجوم"} }
     ];
 
-    const vocabQuestions = [
-      {
-        q: "The book was a beautiful ____ with a happy ending.",
-        a: "fairy tale",
-        options: ["fairy tale", "crowds", "crashed", "popular"]
-      },
-      {
-        q: "He visited a small ____ in the Caribbean.",
-        a: "island",
-        options: ["popular", "ordinary", "island", "in need"]
-      },
-      {
-        q: "There were huge ____ waiting for the concert.",
-        a: "crowds",
-        options: ["crashed", "island", "crowds", "raising money"]
-      },
-      {
-        q: "The event ____ in the main hall.",
-        a: "took place",
-        options: ["took place", "crashed", "in need", "fairy tale"]
-      },
-      {
-        q: "Their car ____ into a tree last night.",
-        a: "crashed",
-        options: ["popular", "crashed", "raising money", "crowds"]
-      },
-      {
-        q: "He’s very ____, everyone knows him!",
-        a: "popular",
-        options: ["ordinary", "popular", "island", "crashed"]
-      },
-      {
-        q: "We’re ____ for the poor.",
-        a: "raising money",
-        options: ["raising money", "crowds", "took place", "in need"]
-      },
-      {
-        q: "She offered help to those ____.",
-        a: "in need",
-        options: ["ordinary", "popular", "in need", "fairy tale"]
-      },
-      {
-        q: "It was just an ____ day.",
-        a: "ordinary",
-        options: ["popular", "ordinary", "raising money", "island"]
-      },
-      {
-        q: "They told us a funny ____.",
-        a: "fairy tale",
-        options: ["crowds", "in need", "fairy tale", "took place"]
-      },
-      {
-        q: "We got stuck because our boat hit an ____.",
-        a: "island",
-        options: ["crowds", "raising money", "island", "crashed"]
-      },
-      {
-        q: "He’s not famous, just an ____ person.",
-        a: "ordinary",
-        options: ["fairy tale", "popular", "ordinary", "crashed"]
-      },
-      {
-        q: "They were ____ for charity.",
-        a: "raising money",
-        options: ["in need", "raising money", "took place", "crashed"]
-      },
-      {
-        q: "The show ____ at 8 PM.",
-        a: "took place",
-        options: ["crowds", "took place", "crashed", "popular"]
-      },
-      {
-        q: "The fans gathered in large ____.",
-        a: "crowds",
-        options: ["popular", "ordinary", "crowds", "fairy tale"]
-      }
-    ];
+    const area = document.getElementById('questions-area');
+    quizData.forEach((item, index) => {
+        let qHTML = `
+            <div class="question" id="q${index}">
+                <p>${index + 1}. ${item.q}</p>
+                <ul class="options">
+                    <li><input type="radio" name="q${index}" value="أ"> أ) ${item.options.أ}</li>
+                    <li><input type="radio" name="q${index}" value="ب"> ب) ${item.options.ب}</li>
+                    <li><input type="radio" name="q${index}" value="ج"> ج) ${item.options.ج}</li>
+                </ul>
+                <div class="correct-ans" id="ans${index}">الإجابة الصحيحة: ${item.a}</div>
+            </div>`;
+        area.innerHTML += qHTML;
+    });
 
-    const quizForm = document.getElementById("quizForm");
-
-    function renderQuestions(arr, prefix) {
-      arr.forEach((q, i) => {
-        const div = document.createElement("div");
-        div.className = "question";
-        div.innerHTML = `<p>${prefix}${i + 1}. ${q.q}</p>` +
-          q.options.map(opt => `
-            <label><input type="radio" name="${prefix}${i + 1}" value="${opt}"> ${opt}</label>
-          `).join("");
-        quizForm.appendChild(div);
-      });
-    }
-
-    renderQuestions(grammarQuestions, "g");
-    renderQuestions(vocabQuestions, "v");
-
-    function submitQuiz() {
-      let score = 0;
-      let total = grammarQuestions.length + vocabQuestions.length;
-      let resultText = "";
-
-      function checkAnswers(arr, prefix) {
-        arr.forEach((q, i) => {
-          const name = `${prefix}${i + 1}`;
-          const selected = document.querySelector(`input[name='${name}']:checked`);
-          if (selected) {
-            if (selected.value === q.a) {
-              score++;
-              resultText += `✅ ${name}: Correct!\n`;
+    function checkQuiz() {
+        let score = 0;
+        quizData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const ansDiv = document.getElementById(`ans${index}`);
+            ansDiv.style.display = "block";
+            if (selected && selected.value === item.a) {
+                score++;
+                document.getElementById(`q${index}`).style.backgroundColor = "#d4edda";
             } else {
-              resultText += `❌ ${name}: Wrong (Correct: ${q.a})\n`;
+                document.getElementById(`q${index}`).style.backgroundColor = "#f8d7da";
             }
-          } else {
-            resultText += `⚠️ ${name}: Not answered (Correct: ${q.a})\n`;
-          }
         });
-      }
 
-      checkAnswers(grammarQuestions, "g");
-      checkAnswers(vocabQuestions, "v");
-
-      document.getElementById("result").innerText = `${resultText}\n\nYour Score: ${score}/${total}`;
+        const resultBox = document.getElementById('result-box');
+        resultBox.style.display = "block";
+        let message = score >= 15 ? "عاش فشخ" : "راجع تاني الماده ي باشا";
+        resultBox.innerHTML = `درجتك هي: ${score} من 30 <br> ${message}`;
+        resultBox.style.backgroundColor = score >= 15 ? "#d4edda" : "#f8d7da";
+        window.scrollTo(0, document.body.scrollHeight);
     }
-  </script>
+</script>
+
 </body>
 </html>
