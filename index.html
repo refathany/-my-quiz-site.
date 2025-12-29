@@ -2,107 +2,405 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>امتحان</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار خرائط التوزيعات النوعية - رِفْعَت</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; margin: 0; padding: 20px; }
-        .quiz-container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #28a745; padding-bottom: 10px; }
-        .question { margin-bottom: 25px; padding: 15px; border-bottom: 1px solid #eee; }
-        .question p { font-weight: bold; font-size: 1.1em; color: #333; }
-        .options { list-style: none; padding: 0; }
-        .options li { margin: 8px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        .options li:hover { background: #e2e6ea; }
-        input[type="radio"] { margin-left: 10px; cursor: pointer; }
-        #submit-btn { display: block; width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; margin-top: 20px; }
-        #submit-btn:hover { background: #218838; }
-        #result-box { display: none; margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.3em; }
-        .correct-ans { color: #28a745; font-size: 0.9em; display: none; margin-top: 5px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c2c2c; /* رمادي غامق */
+            color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4db6ac;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-card {
+            background-color: #3b3b3b;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border-right: 5px solid #4db6ac;
+        }
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            background-color: #4a4a4a;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options label:hover {
+            background-color: #555;
+        }
+        input[type="radio"] {
+            margin-left: 10px;
+        }
+        button#submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #00897b;
+            color: white;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button#submit-btn:hover {
+            background-color: #00695c;
+        }
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #3b3b3b;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #4db6ac;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 5px;
+            font-size: 0.9em;
+            display: none; /* مخفي لحد ما النتيجة تظهر */
+        }
+        .correct-answer {
+            color: #81c784; /* أخضر فاتح */
+            font-weight: bold;
+        }
+        .wrong-answer {
+            color: #e57373; /* أحمر فاتح */
+            font-weight: bold;
+        }
+        .page-ref {
+            color: #aaa;
+            font-style: italic;
+            margin-top: 5px;
+            display: block;
+        }
+        .rationale {
+            color: #ddd;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 <body>
 
-<div class="quiz-container">
-    <h1>اختبار مادة تحليل الصور الفضائية (30 سؤال)</h1>
-    <p style="text-align: center;">بالتوفيق يا <b>باشا</b></p>
-    <hr>
-    <form id="quizForm">
-        <div id="questions-area"></div>
-        <button type="button" id="submit-btn" onclick="checkQuiz()">إرسال الإجابات وحساب الدرجة</button>
-    </form>
+<div class="container">
+    <h1>اختبار خرائط التوزيعات النوعية</h1>
+    <div id="quiz-container">
+        </div>
+    
+    <button id="submit-btn" onclick="calculateScore()">اعرض النتيجة</button>
 
-    <div id="result-box"></div>
+    <div id="result-header" class="result-box"></div>
 </div>
 
 <script>
-    const quizData = [
-        { q: "الهدف الأساسي من عملية تحليل الصور الفضائية هو:", a: "ب", options: {أ: "تخزين الصور فقط", ب: "استخراج المعلومات والتفاصيل الهامة بشكل دقيق", ج: "زيادة حجم الصورة الرقمية"} },
-        { q: "الخطوة التي تهدف لضمان دقة البيانات وإزالة التأثيرات هي:", a: "ب", options: {أ: "تحميل الصور", ب: "تصحيح الصورة (إشعاعياً ولونياً)", ج: "تحديد المعالم"} },
-        { q: "تحديد المعالم مثل الغابات يتم باستخدام تقنيات:", a: "ب", options: {أ: "المسح اليدوي", ب: "تعلم الآلة (Machine Learning)", ج: "التصوير التقليدي"} },
-        { q: "المؤشر النباتي (VI) هو تحول طيفي لتعزيز مساهمة:", a: "ب", options: {أ: "رطوبة التربة", ب: "خصائص النباتات والتمثيل الضوئي", ج: "حرارة الجو"} },
-        { q: "مادة الكلوروفيل في النباتات الصحية تقوم بـ:", a: "ب", options: {أ: "عكس الأحمر بقوة", ب: "امتصاص كمية كبيرة من الضوء الأحمر", ج: "امتصاص الـ NIR بالكامل"} },
-        { q: "تتميز النباتات الصحية بـ:", a: "أ", options: {أ: "انعكاس عالٍ جداً في الـ NIR", ب: "انعكاس منخفض في الـ NIR", ج: "امتصاص الـ NIR"} },
-        { q: "العلاقة العكسية في المؤشرات تكون بين:", a: "ب", options: {أ: "الأخضر والأزرق", ب: "الانعكاس الأحمر والـ NIR", ج: "تحت الحمراء والحرارة"} },
-        { q: "يتميز منحنى الماء بامتصاص عالي في نطاق:", a: "ب", options: {أ: "الضوء المرئي", ب: "الأشعة تحت الحمراء وما بعدها", ج: "الأشعة فوق البنفسجية"} },
-        { q: "المياه العكرة لها انعكاس أعلى من المياه النقية في النطاق:", a: "ب", options: {أ: "تحت الأحمر", ب: "المرئي", ج: "الميكروويف"} },
-        { q: "يُستخدم نمط انعكاس الماء للكشف عن:", a: "ب", options: {أ: "الصخور", ب: "الطحالب والتلوث النفطي", ج: "الأسماك"} },
-        { q: "يتم حساب SVI عن طريق المعادلة:", a: "ب", options: {أ: "NIR - R", ب: "NIR / R", ج: "R / NIR"} },
-        { q: "تتراوح قيمة SVI بين:", a: "ب", options: {أ: "-1 إلى 1", ب: "0 إلى 1", ج: "0 إلى 100"} },
-        { q: "من مميزات SVI أنه:", a: "ب", options: {أ: "يزيد التضاريس", ب: "يقلل تأثير العوامل الجوية والتضاريس", ج: "يهمل النباتات"} },
-        { q: "العالم الذي طور مؤشر NDVI هو:", a: "ب", options: {أ: "Deering", ب: "Rouse et al", ج: "Crist"} },
-        { q: "معادلة NDVI هي:", a: "ب", options: {أ: "(NIR+R)/(NIR-R)", ب: "(NIR-R)/(NIR+R)", ج: "NIR/R"} },
-        { q: "في Landsat 8، يمثل Band 5 و Band 4 على التوالي:", a: "ب", options: {أ: "Red و NIR", ب: "NIR و Red", ج: "Green و Blue"} },
-        { q: "قيم NDVI من (-1.0) إلى (0) تمثل:", a: "ب", options: {أ: "غابات", ب: "سحب ومياه وثلوج", ج: "محاصيل"} },
-        { q: "القيم القريبة من الصفر في NDVI تشير لـ:", a: "أ", options: {أ: "تربة عارية وصخور", ب: "شجيرات", ج: "مياه"} },
-        { q: "الغابات الاستوائية تعطي قيم NDVI بين:", a: "ب", options: {أ: "0.2 - 0.3", ب: "0.6 - 1.0", ج: "-0.1 - 0.1"} },
-        { q: "عند إصابة النبات بالجفاف، فإن انعكاس NIR:", a: "ب", options: {أ: "يزداد", ب: "يقل (يمتص أكثر)", ج: "لا يتغير"} },
-        { q: "يستخدم المزارعون NDVI لتحديد احتياجات:", a: "أ", options: {أ: "السماد والري", ب: "نوع التربة", ج: "سرعة الرياح"} },
-        { q: "الهدف من TVI هو:", a: "ب", options: {أ: "زيادة السلبيات", ب: "تجنب القيم السلبية وتعديل التوزيع", ج: "قياس الرطوبة"} },
-        { q: "معادلة TVI تعتمد على NDVI و:", a: "ب", options: {أ: "التربيع", ب: "الجذر التربيعي و 0.5", ج: "اللوغاريتم"} },
-        { q: "تحويل القبعة TCT صمم أصلاً لمجس:", a: "ب", options: {أ: "TM", ب: "MSS", ج: "OLI"} },
-        { q: "مكون السطوع (Brightness) يعكس:", a: "ب", options: {أ: "كثافة الخضرة", ب: "انعكاس التربة والأسطح الجافة", ج: "الماء"} },
-        { q: "المكون الذي يعكس نمو النباتات في TCT هو:", a: "ب", options: {أ: "Wetness", ب: "Greenness", ج: "Noise"} },
-        { q: "في بيانات TM، المحور الثالث يمثل:", a: "ب", options: {أ: "الاصفرار", ب: "الرطوبة (Wetness)", ج: "السطوع"} },
-        { q: "تظهر خصائص التربة في MSS على شكل:", a: "ب", options: {أ: "قبعة", ب: "سحابة بيضاوية", ج: "نقطة"} },
-        { q: "مكون الضوضاء (Noise) يمثل:", a: "ب", options: {أ: "الرطوبة", ب: "بيانات لا تتعلق بالنبات أو التربة", ج: "المباني"} },
-        { q: "الزراعة الدقيقة تستخدم NDVI لـ:", a: "أ", options: {أ: "توفير الوقت وتحديد مناطق المشاكل", ب: "تغيير الألوان فقط", ج: "رصد النجوم"} }
+    // قاعدة بيانات الأسئلة (30 سؤال)
+    const questions = [
+        {
+            q: "ما هو الهدف الرئيسي لخرائط التوزيعات النوعية (Qualitative Maps)؟",
+            options: ["المقارنة بين الكميات والأحجام", "توضيح نوع الظاهرة وموقعها دون النظر للكميات", "قياس المسافات الدقيقة", "توضيح التضاريس والارتفاعات فقط"],
+            answer: 1,
+            rationale: "الخرائط النوعية تهتم بإبراز الحقائق الجغرافية ونوع الظاهرة (مثل معادن، لغات) بغض النظر عن كمياتها.",
+            page: 5
+        },
+        {
+            q: "أي من الرموز التالية يُستخدم في خرائط التوزيعات النوعية؟",
+            options: ["خطوط التساوي (Isopleth)", "الدوائر النسبية", "رموز الموضع النقطي (هندسية وتصويرية)", "المكعبات النسبية"],
+            answer: 2,
+            rationale: "رموز الموضع النقطي (هندسية، تصويرية، حروف) هي المستخدمة في النوعية، الباقي للكمية.",
+            page: 3
+        },
+        {
+            q: "ما هي أبرز مشكلة تواجه استخدام الرموز الهندسية (مثل المربع والدائرة) في الخرائط؟",
+            options: ["صعوبة فهمها", "مشكلة تكرار رسم الرمز بنفس الأبعاد", "عدم دقتها", "قلة الألوان المتاحة"],
+            answer: 1,
+            rationale: "يصعب تكرار تمثيل الرمز بأبعاده المختلفة يدوياً بدقة، وتم حلها بمساطر العلامات.",
+            page: 11
+        },
+        {
+            q: "كيف يمكن حل مشكلة تلاحم الرموز الهندسية في المناطق المزدحمة على الخريطة؟",
+            options: ["حذف بعض الرموز", "استخدام رموز بحجم أصغر", "تغيير نوع الخريطة", "استخدام الكتابة بدلاً من الرموز"],
+            answer: 1,
+            rationale: "يتم حل مشكلة التلاحم باستخدام رموز هندسية بحجم أصغر، مع ضرورة تطابقها مع المفتاح.",
+            page: 12
+        },
+        {
+            q: "متى ظهر استخدام الرموز التصويرية بشكل واضح في الأطالس العالمية؟",
+            options: ["عام 1950", "عام 1968 (أطلس وارسو)", "عام 2000", "في القرن التاسع عشر"],
+            answer: 1,
+            rationale: "ظهرت عام 1968 في أطلس أصدرته دار برجامون في وارسو.",
+            page: 13
+        },
+        {
+            q: "ما هي الميزة الرئيسية للرموز التصويرية (Pictorial Symbols)؟",
+            options: ["سهولة القراءة والفهم دون الرجوع للمفتاح أحياناً", "دقتها الإحصائية العالية", "سهولة رسمها يدوياً", "صغر مساحتها على الخريطة"],
+            answer: 0,
+            rationale: "الرموز التصويرية تعطي انطباعاً سريعاً ولا تُنسى، وتسهل الفهم لأن شكل الرمز يعبر عن الظاهرة.",
+            page: 15
+        },
+        {
+            q: "ما هو العيب الرئيسي لخرائط رموز الحروف الأبجدية؟",
+            options: ["صعوبة قراءتها", "تختلط بالكتابات والأسماء الأخرى على الخريطة", "تحتاج لألوان كثيرة", "لا تستخدم في الخرائط الجيولوجية"],
+            answer: 1,
+            rationale: "وضع الحروف داخل الخريطة يجعلها تختلط بأسماء المعالم والمدن، مما يسبب إرباكاً.",
+            page: 19
+        },
+        {
+            q: "لماذا تعتبر رموز الحروف الأبجدية غير دقيقة في تمثيل الأهمية النسبية؟",
+            options: ["لأن الحروف صغيرة جداً", "لأن حجم الحرف ثابت سواء كان الإنتاج ضخماً أو ضئيلاً", "لأنها لا تستخدم الألوان", "لأنها رموز قديمة"],
+            answer: 1,
+            rationale: "يتساوى المنجم ذو الإنتاج الضخم مع المنجم الصغير لأن الرمز (الحرف) واحد.",
+            page: 19
+        },
+        {
+            q: "تُستخدم خرائط رموز الخط النوعية لتمثيل ظاهرات مثل:",
+            options: ["توزيع السكان", "الحدود السياسية وشبكات الطرق", "كميات الأمطار", "درجات الحرارة"],
+            answer: 1,
+            rationale: "رموز الخط تستخدم للظاهرات ذات الامتداد الطولي كالحدود، الأنهار، والسكك الحديدية.",
+            page: 20
+        },
+        {
+            q: "كيف يتم توضيح تطور شبكة الطرق زمنياً في خرائط رموز الخط النوعية؟",
+            options: ["باستخدام ألوان مختلفة لكل سنة", "باستخدام خطوط مختلفة السُمك لكل فترة زمنية", "بكتابة التاريخ على الخط", "برسم خرائط منفصلة فقط"],
+            answer: 1,
+            rationale: "يتم استخدام خطوط مختلفة السمك لإيضاح التطور خلال الفترات الزمنية المختلفة.",
+            page: 23
+        },
+        {
+            q: "مصطلح 'Chorochromatic' يُطلق على:",
+            options: ["خرائط التظليل المساحي النوعي", "خرائط خطوط التساوي", "الخرائط الطبوغرافية", "الخرائط المناخية"],
+            answer: 0,
+            rationale: "كلمة Chorochromatic تعني التلوين أو التظليل المساحي (Choros: مكان، Chroma: لون).",
+            page: 25
+        },
+        {
+            q: "في خرائط الكوروكروماتيك، يجب أن تكون الألوان أو الظلال:",
+            options: ["متدرجة (Graded)", "غير متدرجة (Ungraded) ومتباينة", "بلون واحد فقط", "بيضاء وسوداء فقط"],
+            answer: 1,
+            rationale: "لأنها خرائط نوعية لا تعبر عن كميات، فيجب أن تكون الألوان متباينة وغير مرتبطة ببعضها بتدرج.",
+            page: 25
+        },
+        {
+            q: "ما هي المشكلة الرئيسية عند رسم حدود الظاهرات في خرائط التظليل المساحي (مثل اللغات)؟",
+            options: ["نقص الألوان", "تداخل الظاهرات في مناطق الانتقال (Transition Zones)", "صعوبة الطباعة", "عدم وجود بيانات"],
+            answer: 1,
+            rationale: "يعاني الكارتوجرافي من تداخل الظلال في مناطق الانتقال حيث لا يوجد حد فاصل قاطع بين لغتين أو ديانتين.",
+            page: 27
+        },
+        {
+            q: "أسلوب 'الأصابع المتداخلة' يستخدم لحل مشكلة:",
+            options: ["تكرار الرموز", "تداخل الظاهرات في المناطق الانتقالية", "ازدحام الكتابة", "تمثيل الطرق"],
+            answer: 1,
+            rationale: "تظهر منطقة التداخل على شكل مستطيلات أو أصابع متداخلة لبيان توغل ظاهرة في أخرى.",
+            page: 28
+        },
+        {
+            q: "تعتبر طريقة 'تداخل الظلال' (Blending) من أفضل الأساليب لأنها:",
+            options: ["الأسهل في الرسم", "تعطي صورة حقيقية لانتشار الظاهرة ومنطقة الاختلاط", "توفر الحبر", "تستخدم للحضري فقط"],
+            answer: 1,
+            rationale: "تعطي صورة واقعية لانتشار كل ظاهرة وامتزاجها في مناطق التداخل، مثل الغابات.",
+            page: 29
+        },
+        {
+            q: "خرائط 'الكوروسيكماتيك' (Choroschematic) تعتمد على:",
+            options: ["التلوين الكامل", "ملء المساحة برموز تصويرية صغيرة متكررة", "استخدام الخطوط فقط", "الدوائر النسبية"],
+            answer: 1,
+            rationale: "تعتمد على ملء إقليم الظاهرة برموز تصويرية صغيرة (مثل شجر لغابة) لتمييز المساحة.",
+            page: 30
+        },
+        {
+            q: "أي مما يلي يُعد مثالاً لخرائط التوزيعات النوعية؟",
+            options: ["خريطة الكثافة السكانية", "خريطة توزيع أنواع التربة", "خريطة كميات الإنتاج الصناعي", "خريطة معدلات المواليد"],
+            answer: 1,
+            rationale: "أنواع التربة هي ظاهرة نوعية (اسمية) لا تعتمد على الكميات.",
+            page: 5
+        },
+        {
+            q: "يمكن استخدام الشكل الهندسي الواحد (مثل المستطيل) لتمثيل أكثر من ظاهرة عن طريق:",
+            options: ["تغيير مكانه", "استخدامه فارغاً لظاهرة ومعتماً (مظللاً) لظاهرة أخرى", "تصغير حجمه جداً", "لا يمكن ذلك"],
+            answer: 1,
+            rationale: "من مميزات الرموز الهندسية إمكانية تنويعها بتظليل نصفها أو تركها فارغة لتعطي مدلولات مختلفة.",
+            page: 8
+        },
+        {
+            q: "خرائط استخدام الأرض (Land Use) تصنف عادة ضمن:",
+            options: ["خرائط التوزيعات الكمية", "خرائط التوزيعات النوعية (المساحية)", "الخرائط المناخية", "خرائط التدفق"],
+            answer: 1,
+            rationale: "خرائط استخدام الأرض توضح نوع الاستخدام (سكني، تجاري، زراعي) فهي نوعية مساحية.",
+            page: 24
+        },
+        {
+            q: "ما المقصود بخرائط التدفق (Flow line Maps)؟",
+            options: ["خرائط نوعية للحدود", "خرائط كمية توضح الحركة والكميات على طول خط", "خرائط للتضاريس", "خرائط للنبات الطبيعي"],
+            answer: 1,
+            rationale: "خرائط الخطوط الانسيابية هي خرائط كمية (وردت في المقارنة في صفحة 4).",
+            page: 4
+        },
+        {
+            q: "في خرائط الرموز الهندسية، يساعد استخدام 'الألوان' على:",
+            options: ["تقليل التكلفة", "زيادة إبراز الخصائص الجغرافية والتمييز بين الظاهرات", "إخفاء العيوب", "جعل الخريطة أصغر"],
+            answer: 1,
+            rationale: "يمكن استخدام الألوان لزيادة التوضيح والتمييز بين أنواع الظاهرات الممثلة بنفس الشكل.",
+            page: 8
+        },
+        {
+            q: "من عيوب طريقة 'تحديد نطاقات الاختلاط' بلون ثالث مستقل:",
+            options: ["أنها تعطي انطباعاً خاطئاً بوجود إقليم جديد مستقل", "أنها صعبة الرسم", "أنها باهظة التكلفة", "أنها غير واضحة"],
+            answer: 0,
+            rationale: "ظهور لون ثالث قد يوحي بأنه إقليم جديد وليس مجرد منطقة خليط، وهو أسلوب قد يكون خاطئاً.",
+            page: 28
+        },
+        {
+            q: "الخرائط الجيولوجية تعتبر مثالاً على:",
+            options: ["خرائط الرموز الخطية", "خرائط التظليل المساحي النوعي (Chorochromatic)", "الخرائط الكمية", "الخرائط الطبوغرافية"],
+            answer: 1,
+            rationale: "الخرائط الجيولوجية توزع أنواع الصخور على مساحات، فهي خرائط تظليل مساحي نوعي.",
+            page: 31
+        },
+        {
+            q: "الرموز المستخدمة في الخريطة السياحية لتوضيح الفنادق والمطاعم هي غالباً:",
+            options: ["رموز هندسية", "رموز تصويرية", "رموز كمية", "خطوط تساوي"],
+            answer: 1,
+            rationale: "الخرائط السياحية تعتمد بشدة على الرموز التصويرية (شوكة وسكين للمطعم، سرير للفندق).",
+            page: 13
+        },
+        {
+            q: "عند تمثيل 'توزيع اللغات' في العالم، الأفضل استخدام:",
+            options: ["رموز الموضع النقطي", "طريقة التظليل المساحي (Chorochromatic)", "الدوائر النسبية", "الخطوط الانسيابية"],
+            answer: 1,
+            rationale: "اللغات تنتشر في نطاقات ومساحات واسعة، لذا الأنسب هو التظليل المساحي.",
+            page: 24
+        },
+        {
+            q: "في خرائط التوزيعات، إذا أردنا توضيح موقع منجم حديد دون الإشارة لكمية إنتاجه، نستخدم:",
+            options: ["رموز الموضع النوعية", "الدوائر النسبية", "المربعات النسبية", "النقط الكمية"],
+            answer: 0,
+            rationale: "ما دمنا لا نهتم بالكمية، نستخدم رموز الموضع النوعية (هندسية أو تصويرية).",
+            page: 6
+        },
+        {
+            q: "من الحلول المقترحة لمشكلة الرموز الحرفية (الأبجدية) لبيان الأهمية النسبية:",
+            options: ["استخدام 3 أحجام مختلفة من الرموز", "تغيير نوع الخط", "الكتابة باللغة الإنجليزية", "إلغاء الرمز"],
+            answer: 0,
+            rationale: "يحاول البعض التغلب على المشكلة بوضع ثلاثة أحجام من الحروف (كبير، وسط، صغير) للتمييز التقريبي.",
+            page: 19
+        },
+        {
+            q: "تُستخدم الخطوط المزدوجة والمفردة والمتقطعة في خرائط النقل للتمييز بين:",
+            options: ["كمية المرور", "درجة وسعة الطريق (طريق سريع، رئيسي، فرعي)", "طول الطريق", "اسم الشركة المنفذة"],
+            answer: 1,
+            rationale: "تنوع شكل الخط (سميك، رفيع، متقطع) يعبر عن نوع الطريق ودرجته.",
+            page: 20
+        },
+        {
+            q: "أي من الآتي لا يُعد من طرق رسم خرائط التظليل المساحي؟",
+            options: ["الألوان غير المتدرجة", "الرموز التصويرية المتكررة", "الدوائر النسبية", "الظلال غير المتدرجة"],
+            answer: 2,
+            rationale: "الدوائر النسبية هي وسيلة كمية وليست مساحية نوعية.",
+            page: 25
+        },
+        {
+            q: "توزيع الديانات في العالم يتم تمثيله عادة بخرائط:",
+            options: ["التظليل المساحي النوعي", "الخطوط الانسيابية", "النقط الكمية", "المجسمات"],
+            answer: 0,
+            rationale: "الديانات تنتشر كمساحات (أقاليم)، لذا نستخدم التظليل المساحي النوعي.",
+            page: 31
+        }
     ];
 
-    const area = document.getElementById('questions-area');
-    quizData.forEach((item, index) => {
-        let qHTML = `
-            <div class="question" id="q${index}">
-                <p>${index + 1}. ${item.q}</p>
-                <ul class="options">
-                    <li><input type="radio" name="q${index}" value="أ"> أ) ${item.options.أ}</li>
-                    <li><input type="radio" name="q${index}" value="ب"> ب) ${item.options.ب}</li>
-                    <li><input type="radio" name="q${index}" value="ج"> ج) ${item.options.ج}</li>
-                </ul>
-                <div class="correct-ans" id="ans${index}">الإجابة الصحيحة: ${item.a}</div>
-            </div>`;
-        area.innerHTML += qHTML;
-    });
-
-    function checkQuiz() {
+    function calculateScore() {
         let score = 0;
-        quizData.forEach((item, index) => {
-            const selected = document.querySelector(`input[name="q${index}"]:checked`);
-            const ansDiv = document.getElementById(`ans${index}`);
-            ansDiv.style.display = "block";
-            if (selected && selected.value === item.a) {
-                score++;
-                document.getElementById(`q${index}`).style.backgroundColor = "#d4edda";
-            } else {
-                document.getElementById(`q${index}`).style.backgroundColor = "#f8d7da";
-            }
+        const container = document.getElementById('quiz-container');
+        const inputs = container.querySelectorAll('input[type="radio"]:checked');
+        
+        // إعادة تعيين الألوان والنتائج
+        document.querySelectorAll('.feedback').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('label').forEach(el => {
+            el.style.backgroundColor = '#4a4a4a';
+            el.style.color = '#f0f0f0';
         });
 
-        const resultBox = document.getElementById('result-box');
-        resultBox.style.display = "block";
-        let message = score >= 15 ? "عاش فشخ" : "راجع تاني الماده ي باشا";
-        resultBox.innerHTML = `درجتك هي: ${score} من 30 <br> ${message}`;
-        resultBox.style.backgroundColor = score >= 15 ? "#d4edda" : "#f8d7da";
-        window.scrollTo(0, document.body.scrollHeight);
+        // التحقق من الإجابات
+        questions.forEach((q, index) => {
+            const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback-${index}`);
+            
+            if (selectedOption) {
+                const answerValue = parseInt(selectedOption.value);
+                if (answerValue === q.answer) {
+                    score++;
+                    selectedOption.parentElement.style.backgroundColor = '#2e7d32'; // أخضر غامق للإجابة الصح
+                } else {
+                    selectedOption.parentElement.style.backgroundColor = '#c62828'; // أحمر للإجابة الغلط
+                }
+            }
+            
+            // إظهار الإجابة الصح والتفسير
+            feedbackDiv.style.display = 'block';
+            feedbackDiv.innerHTML = `
+                <span class="${questions[index].answer === (selectedOption ? parseInt(selectedOption.value) : -1) ? 'correct-answer' : 'wrong-answer'}">
+                    ${questions[index].answer === (selectedOption ? parseInt(selectedOption.value) : -1) ? 'إجابة صحيحة! ممتاز.' : 'إجابة خاطئة.'}
+                </span><br>
+                الإجابة الصحيحة هي: <strong>${q.options[q.answer]}</strong><br>
+                <span class="rationale"><strong>التفسير:</strong> ${q.rationale}</span>
+                <span class="page-ref">راجع صفحة: ${q.page} في الـ PDF</span>
+            `;
+        });
+
+        // عرض النتيجة النهائية
+        const resultHeader = document.getElementById('result-header');
+        resultHeader.style.display = 'block';
+        resultHeader.innerHTML = `
+            <h2>نتيجتك: ${score} من ${questions.length}</h2>
+            <p>${score >= 15 ? 'عاش يا وحش! شغل عالي.' : 'محتاج تراجع الملف تاني يا بطل.'}</p>
+        `;
+        
+        // سكرول للنتيجة
+        resultHeader.scrollIntoView({behavior: "smooth"});
     }
+
+    // توليد الأسئلة عند تحميل الصفحة
+    window.onload = function() {
+        const container = document.getElementById('quiz-container');
+        questions.forEach((q, index) => {
+            const questionHTML = `
+                <div class="question-card">
+                    <div class="question-text">${index + 1}. ${q.q}</div>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <label>
+                                <input type="radio" name="q${index}" value="${i}">
+                                ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div id="feedback-${index}" class="feedback"></div>
+                </div>
+            `;
+            container.innerHTML += questionHTML;
+        });
+    };
 </script>
 
 </body>
