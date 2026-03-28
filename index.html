@@ -3,222 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>round 1</title>
+    <title>تحدي تكنولوجيا المعلومات - الفصل الأول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f39c12;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e1e; /* رمادي غامق جداً */
-            color: #dcdcdc;
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: var(--light);
             margin: 0;
-            padding: 15px;
-            line-height: 1.7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #2b2b2b; /* رمادي متوسط */
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            border-top: 5px solid #607d8b; /* لون رصاصي مزرق */
-        }
-        h1 {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             text-align: center;
-            color: #ececec;
-            margin-bottom: 25px;
-            font-size: 1.6em;
-            border-bottom: 1px solid #444;
-            padding-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .intro {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #9e9e9e;
-            font-size: 0.9em;
+
+        .hidden { display: none; }
+
+        h1 { color: var(--secondary); margin-bottom: 20px; }
+        .score-box { font-size: 1.2rem; margin-bottom: 10px; }
+        
+        .timer-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            font-weight: bold;
         }
-        .question-block {
-            background-color: #383838;
-            margin-bottom: 15px;
+
+        .question-text { font-size: 1.5rem; margin-bottom: 25px; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
             padding: 15px;
-            border-radius: 6px;
-            border-right: 4px solid #78909c; /* شريط جانبي */
-            transition: all 0.3s ease;
-        }
-        .question-block:hover {
-            background-color: #424242;
-        }
-        .q-number {
-            color: #90caf9;
-            font-weight: bold;
-            margin-left: 5px;
-        }
-        .q-text {
-            font-weight: 600;
-            font-size: 1.05em;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-        .input-area {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 1px solid #555;
-            border-radius: 4px;
-            background-color: #222;
-            color: #fff;
-            box-sizing: border-box;
-        }
-        .input-area:focus {
-            outline: none;
-            border-color: #90caf9;
-        }
-        .answer-reveal {
-            margin-top: 15px;
-            padding: 12px;
-            background-color: #263238; /* خلفية داكنة للإجابة */
-            border-radius: 4px;
-            border: 1px solid #546e7a;
-            display: none; /* مخفي */
-            color: #b0bec5;
-        }
-        .correct-term {
-            color: #a5d6a7; /* أخضر فاتح */
-            font-weight: bold;
-            font-size: 1.1em;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .ref-page {
-            color: #ffcc80; /* برتقالي باهت للصفحة */
-            font-size: 0.85em;
-            float: left;
-        }
-        .controls {
-            position: sticky;
-            bottom: 20px;
-            text-align: center;
-            margin-top: 30px;
-            z-index: 100;
-        }
-        button {
-            background-color: #607d8b;
+            border-radius: 10px;
             color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .btn:hover { background: rgba(255,255,255,0.3); border-color: var(--secondary); }
+
+        .input-box {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
             font-weight: bold;
+        }
+
+        .correct { background-color: var(--success); }
+        .wrong { background-color: var(--danger); }
+
+        #start-btn, #restart-btn {
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            width: 90%;
-            max-width: 400px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #546e7a;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>جغرافية المدن (المصطلحات الصعبة)</h1>
-    <p class="intro">
-      صباح الرسوب و الامتحانات.<br>
+    <div id="start-screen">
+        <h1>تحدي تكنولوجيا المعلومات 🚀</h1>
+        <p>جاهز يا رِفْعَت؟ قدامك 70 سؤال من الفصل الأول.</p>
+        <p>كل سؤال له 30 ثانية بس!</p>
+        <button id="start-btn" onclick="startQuiz()">ابدأ التحدي الآن</button>
+    </div>
 
-    </p>
+    <div id="quiz-screen" class="hidden">
+        <div class="score-box">السؤال: <span id="q-num">1</span>/70 | السكور: <span id="score">0</span></div>
+        <div class="timer-container" id="timer">30</div>
+        <div class="question-text" id="question"></div>
+        
+        <div id="mcq-options" class="options-grid"></div>
+        
+        <div id="completion-input" class="hidden">
+            <input type="text" id="answer-input" class="input-box" placeholder="اكتب الإجابة هنا...">
+            <button class="btn" onclick="checkCompletion()">تأكيد الإجابة</button>
+        </div>
 
-    <div id="quiz-content"></div>
+        <div id="feedback" class="hidden"></div>
+    </div>
 
-    <div class="controls">
-        <button onclick="revealAnswers()">أظهر النتيجة / الإجابات النموذجية</button>
+    <div id="result-screen" class="hidden">
+        <h1>انتهى التحدي! 🎉</h1>
+        <p style="font-size: 2rem;">جبت <span id="final-score">0</span> من 70</p>
+        <button id="restart-btn" onclick="location.reload()">إعادة المحاولة</button>
     </div>
 </div>
 
 <script>
-    const hardQuestions = [
-        { q: "هي المدن التي تنشأ لتخفيف الضغط السكاني عن مدينة كبرى، وتكون مكتفية ذاتياً بخدماتها وحرفها، وليست مجرد مكان للنوم.", a: "المدن التابعة (Satellite Towns)", p: 19 },
-        { q: "هو التحام عمراني ضخم ينتج عن تمدد مدن متجاورة حتى تلتصق ببعضها (مثل الروهر في ألمانيا).", a: "المجمع الحضري (Conurbation)", p: 19 },
-        { q: "مصطلح يطلق على المدينة التي يزيد عدد سكانها عن مليون نسمة، واستخدم لأول مرة عام 1930.", a: "المدينة المليونية (Millionaire City)", p: 19 },
-        { q: "هي مدن تفتقر للفرص الاقتصادية نهاراً، وتزدحم ليلاً بالسكان الذين يعملون في مدينة مركزية مجاورة.", a: "مدن المنامة (Dormitory Towns)", p: 20 },
-        { q: "هي المدينة التي تتفوق بشكل ساحق على باقي مدن الدولة (عمرانياً وسكانياً وسياسياً) وتكون مركز الثقل الوحيد.", a: "المدينة الأولى / المهيمنة (Primate City)", p: 68 },
-        { q: "مصطلح يطلق على المدن التي يعتمد اقتصادها بالكامل على استخراج المعادن، وتتميز بالنمو الانفجاري السريع والانهيار السريع.", a: "مدن الفطر (Mushroom Cities) / مدن التعدين", p: 56 },
-        { q: "نوع من المواقع ينشأ عند تقاطع خطوط المواصلات أو تلاقي الأنهار (مثل الخرطوم)، ويعني 'العقدة'.", a: "الموقع العقدي (Nodal Point)", p: 25 },
-        { q: "هو الموقع الذي يجعل المدينة بؤرة تتجمع فيها طرق الإقليم السهلي (مثل باريس وموسكو).", a: "الموقع البؤري (Focal Point)", p: 25 },
-        { q: "هي المدن التي تعمل كـ 'مخزن' عالمي، حيث يتم استيراد البضائع لتخزينها ثم إعادة تصديرها دون تصنيعها (مثل سنغافورة).", a: "مدن المستودع (Entrepôt)", p: 49 },
-        { q: "هو نوع من المدن التجارية وظيفتها الرئيسية توزيع البضائع على ظهيرها الإقليمي (سوق مركزية للإقليم).", a: "متجر الظهير (Emporium)", p: 48 },
-        { q: "هي الموانئ التي تتخصص في تزويد السفن العابرة بالوقود والمياه والأغذية (مثل عدن وهونولولو).", a: "موانئ التموين (Bunkering Ports)", p: 53 },
-        { q: "هي المدن التي نشأت وتطورت حول وظيفة 'الدفاع والحماية'، وغالباً ما تكون محاطة بأسوار أو قلاع.", a: "المدن الحربية / القلاع", p: 42 },
-        { q: "هي المدن التي يكون المبرر الوحيد لوجودها هو وجود جامعة أو مؤسسات تعليمية (مثل أكسفورد وكمبريدج).", a: "المدن الجامعية", p: 64 },
-        { q: "هي عواصم يتم اختيار موقعها عمداً في مناطق جديدة لتعميرها أو لحل نزاع سياسي، ولا تملك جذوراً تاريخية في موقعها.", a: "العواصم المستحدثة (Introduced Capitals)", p: 84 },
-        { q: "نمط من العواصم يتم فيه توزيع وظائف الحكم (التشريع، التنفيذ، القضاء) على أكثر من مدينة (مثل جنوب أفريقيا وهولندا).", a: "العواصم المجزأة", p: 86 },
-        { q: "هي المنطقة الأكثر حيوية في المدينة، تتميز بارتفاع ناطحات السحاب والتركز المالي والتجاري.", a: "منطقة الأعمال المركزية (CBD)", p: 101 },
-        { q: "هو النطاق الجغرافي الذي تخدمه المدينة أو الميناء، وتعتمد عليه في استمداد مواردها وتسويق خدماتها.", a: "الظهير (Hinterland)", p: 54 },
-        { q: "هو مصطلح يطلق على النطاق الخارجي الذي يتصل به الميناء عبر البحر (الدول التي يتاجر معها الميناء).", a: "النظير (Foreland)", p: 54 },
-        { q: "هي المدن التي تقع عند نهايات خطوط السكك الحديدية البحرية لنقل القطارات والسيارات (عبّارات).", a: "موانئ قاطرات البحر (Ferry Ports)", p: 53 },
-        { q: "نوع من الصناعات يلزمه التواجد داخل المدن لسرعة تلف منتجاته أو لارتفاع تكلفة نقله للمستهلك (مثل المخابز والثلج).", a: "صناعات المجتمع / الخدمات", p: 55 },
-        { q: "المدن التي تتحدد نشأتها بعوامل 'غيبية' أو ميتافيزيقية، وتكون وظيفتها الروحية هي الأساس.", a: "المدن الدينية", p: 39 },
-        { q: "مصطلح يطلق على المدن التي تعاني من خلل في التركيب النوعي للسكان حيث تطغى نسبة الذكور (مثل مدن التعدين).", a: "مدن ذكورية التكوين", p: 45 },
-        { q: "هي العاصمة التي يتم اختيار موقعها ليكون 'رأس حربة' أو واجهة سياسية للدولة تجاه منطقة نفوذ معين (مثل سان بطرسبرج).", a: "عاصمة التوجيه السياسي (Forward Capital)", p: 78 },
-        { q: "هي المنطقة التي تمثل 'النواة' التاريخية التي بدأت منها الدولة في التشكل والنمو (مثل إيل دو فرانس).", a: "النواة النووية (Nuclear Core)", p: 77 },
-        { q: "نوع من المواقع يقع بين اقليمين مختلفين أو بين نظامين للنقل (مثل نقطة تلاقي الصحراء بالدلتا).", a: "الموقع البيني (Interstitial)", p: 26 },
-        { q: "هي المدن التي تتحكم في الممرات المائية والمضايق الدولية (مثل جبل طارق وبورسعيد).", a: "مدن عنق الزجاجة / المواقع الاستراتيجية", p: 25 },
-        { q: "الموقع الذي يجعل المدينة مدخلاً أو بوابة لإقليم كامل خلفها (مثل الإسكندرية بالنسبة لمصر).", a: "الموقع المدخلي (Gateway City)", p: 26 },
-        { q: "هي المدن التي تنشأ خصيصاً لاستقبال المرضى والباحثين عن الراحة لوجود مياه معدنية أو جو صحي.", a: "مدن الاستشفاء (Spa Towns)", p: 30 },
-        { q: "هي المدن التي تتسم بالجمود النسبي وتعتمد على إرث الماضي والسياحة الثقافية.", a: "المدن التاريخية / المتحفية", p: 11 },
-        { q: "مصطلح يطلق على المناطق العشوائية أو الأحياء المتدهورة التي تنشأ عادة على أطراف المدن الكبرى.", a: "أحياء الصفيح / العشوائيات", p: "عام" },
-        { q: "هي الوظيفة التي تقوم بها المدينة لخدمة سكانها أنفسهم (مثل محلات البقالة والمدارس المحلية).", a: "الوظيفة الأساسية (Non-basic / Local)", p: "استنتاجي" },
-        { q: "هي الوظيفة التي تقوم بها المدينة لخدمة مناطق خارج حدودها وتجلب لها الدخل من الخارج.", a: "الوظيفة القاعدية (Basic Function)", p: "استنتاجي" },
-        { q: "هو الشكل الهندسي أو النمط الذي تتخذه شوارع المدينة ومبانيها (شبكي، إشعاعي، عشوائي).", a: "مورفولوجية المدينة (Morphology)", p: 10 },
-        { q: "هي المدن التي تنشأ لتجميع المواد الخام من مناطق التعدين أو الزراعة لشحنها للخارج.", a: "نقطة التجميع (Point of Assembly)", p: 49 },
-        { q: "العامل الجغرافي (الطبيعي) الذي يحدد المكان الدقيق الذي بُنيت عليه المدينة (التربة، التضاريس، المياه).", a: "الموضع (Site)", p: 23 },
-        { q: "العلاقات المكانية التي تربط المدينة بما حولها من أقاليم ومدن أخرى.", a: "الموقع (Situation)", p: 23 },
-        { q: "هي المدن التي تفقد وظيفتها الأصلية وتتحول إلى مدن أشباح بعد نفاذ المورد (مثل بعض مدن الذهب).", a: "المدن الزائلة / مدن الأشباح", p: 57 },
-        { q: "نوع من العواصم يتم اختياره في منطقة محايدة لضمان عدم تحيز الحكومة لولاية دون أخرى.", a: "العواصم الفيدرالية", p: 87 },
-        { q: "هي المدن المقدسة التي يتركز اقتصادها على مواسم دينية محددة (مثل مكة).", a: "مدن الحج", p: 63 },
-        { q: "مصطلح يطلق على المدينة عندما تتوسع وتبتلع القرى والمدن الصغيرة المجاورة لها.", a: "الزحف العمراني / الامتداد الحضري", p: 15 },
-        { q: "هي الصناعات الثقيلة التي تجذب السكان وتخلق مدناً صناعية كبرى (مثل الحديد والصلب).", a: "الصناعات الموطِّنة (City-forming industries)", p: 58 },
-        { q: "هو الخط الذي يفصل بين الريف والمدينة من حيث المظهر العام للمباني.", a: "خط الأفق (Skyline)", p: 11 },
-        { q: "هي المدن التي تقع على الحدود السياسية للدولة وتكون غالباً نقاط جمارك أو حاميات عسكرية.", a: "مدن الحدود / الثغور", p: 43 },
-        { q: "مصطلح يطلق على العواصم التي تسيطر سياسياً واقتصادياً وثقافياً بشكل يضعف باقي الأقاليم.", a: "المركزية المفرطة", p: 69 },
-        { q: "هي المناطق الصناعية التي يتم التخطيط لها خارج الكتلة السكنية للمدينة.", a: "المناطق الصناعية (Industrial Estates)", p: 105 },
-        { q: "المدينة التي ينشئها المستعمر لتكون مركزاً إدارياً وتجارياً له وتختلف في طابعها عن المدن الوطنية.", a: "المدينة الكولونيالية / الاستعمارية", p: "عام" },
-        { q: "هي ظاهرة ارتفاع درجة الحرارة في وسط المدينة مقارنة بأطرافها بسبب التلوث والكتل الخرسانية.", a: "الجزيرة الحرارية (Heat Island)", p: "مناخ المدن" },
-        { q: "نوع من المدن يعتمد دخلها الأساسي على رواتب المتقاعدين وكبار السن.", a: "مدن التقاعد (Retirement towns)", p: 31 },
-        { q: "هي العملية التي يتم فيها إعادة تأهيل المناطق القديمة المتدهورة في قلب المدينة.", a: "التجديد الحضري (Urban Renewal)", p: 108 },
-        { q: "هو الانتقال اليومي للسكان من أماكن سكنهم في الضواحي إلى أماكن عملهم في المدينة.", a: "حركة البندول (Commuting)", p: 20 }
+    // الداتا مجمعة من الفصل الأول (ص 1 - 29)
+    const questions = [
+        // 30 اختيار من متعدد (MCQ) [cite: 9, 10, 15, 18, 24]
+        { type: 'mcq', q: "ايه هو العلم اللي بيتعامل مع جمع ومعالجة وتخزين المعلومات؟", options: ["تكنولوجيا الاتصالات", "تكنولوجيا المعلومات", "البرمجة", "الشبكات"], a: "تكنولوجيا المعلومات" },
+        { type: 'mcq', q: "أي من الآتي يعتبر من خصائص تكنولوجيا المعلومات والاتصالات؟", options: ["الغموض", "التوقيت", "العشوائية", "التحيز"], a: "التوقيت" },
+        { type: 'mcq', q: "البنية التحتية اللي بتخلي الشركات تأجر موارد الحوسبة بدل ما تشتريها هي:", options: ["التقليدية", "السحابية", "المختلطة", "المادية"], a: "السحابية" },
+        { type: 'mcq', q: "مصطلح الـ 5 Vs مرتبط بأي تقنية؟", options: ["إنترنت الأشياء", "البيانات الضخمة", "البلوك تشين", "الواقع المعزز"], a: "البيانات الضخمة" },
+        { type: 'mcq', q: "مين اللي صك مصطلح 'الذكاء الاصطناعي' سنة 1956؟", options: ["جون مكارثي", "تيورنج", "نيك سابو", "ستراشي"], a: "جون مكارثي" },
+        { type: 'mcq', q: "تقنية بتضيف معلومات رقمية للعالم الحقيقي اللي بنشوفه هي:", options: ["VR", "AR", "IoT", "Big Data"], a: "AR" },
+        { type: 'mcq', q: "الجيل اللي بيوصل سرعته لـ 10 جيجابايت في الثانية هو:", options: ["3G", "4G", "5G", "2G"], a: "5G" },
+        { type: 'mcq', q: "من الأبعاد الأخلاقية لاستخدام التكنولوجيا:", options: ["زيادة التكاليف", "خصوصية المعلومات", "سرعة المعالج", "نوع الشاشة"], a: "خصوصية المعلومات" },
+        { type: 'mcq', q: "عملية تحويل الأنشطة التجارية التقليدية لأنظمة رقمية تسمى:", options: ["الرقمنة", "التحول الرقمي", "الميكنة", "الأتمتة"], a: "التحول الرقمي" },
+        { type: 'mcq', q: "سلسلة من كتل البيانات المؤمنة بالتشفير تسمى:", options: ["إنترنت الأشياء", "البلوك تشين", "قواعد البيانات", "الحوسبة"], a: "البلوك تشين" },
+        // ... (تكملة الـ 30 MCQ)
+        { type: 'mcq', q: "خاصية في البيانات الضخمة بتشير لمدى صحة وموثوقية البيانات:", options: ["Volume", "Velocity", "Veracity", "Value"], a: "Veracity" },
+        { type: 'mcq', q: "الذكاء الاصطناعي فرع من فروع علم:", options: ["الرياضيات", "الحاسوب", "الإحصاء", "الفيزياء"], a: "الحاسوب" },
+        { type: 'mcq', q: "تقنية بتخلي الأجهزة تتواصل مع بعضها عبر الإنترنت:", options: ["Big Data", "IoT", "Blockchain", "5G"], a: "IoT" },
+        { type: 'mcq', q: "الفجوة الرقمية هي الفرق في الوصول للتكنولوجيا بين:", options: ["الشباب وكبار السن", "الدول المتقدمة والنامية", "الرجال والنساء", "المهندسين والأطباء"], a: "الدول المتقدمة والنامية" },
+        { type: 'mcq', q: "نظام تشغيل موبايل مفتوح المصدر ومبني على لينكس:", options: ["iOS", "Windows", "Android", "Blackberry"], a: "Android" },
+        { type: 'mcq', q: "تطبيق يستخدم للوصول للأماكن عبر الملاحة الجغرافية:", options: ["Google Docs", "GPS", "Spotify", "Babbel"], a: "GPS" },
+        { type: 'mcq', q: "أهم الموارد الاستراتيجية في المجتمع المعاصر هي:", options: ["البترول", "المعلومات", "الذهب", "المعادن"], a: "المعلومات" },
+        { type: 'mcq', q: "من فوائد البنية التحتية الحديثة:", options: ["زيادة الابتكار", "بطء الشبكة", "زيادة التعطل", "فقد البيانات"], a: "زيادة الابتكار" },
+        { type: 'mcq', q: "التحول المؤسسي يهدف لإعادة اكتشاف:", options: ["الموظفين", "المؤسسة وثقافتها", "العملاء", "المباني"], a: "المؤسسة وثقافتها" },
+        { type: 'mcq', q: "أول موقع سمح بإنشاء بروفايل وإضافة أصدقاء (1997):", options: ["Facebook", "SixDegrees.com", "Twitter", "MySpace"], a: "SixDegrees.com" },
+        { type: 'mcq', q: "منصة تواصل اجتماعي تركز على الصور بشكل أساسي:", options: ["YouTube", "Twitter", "Pinterest", "LinkedIn"], a: "Pinterest" },
+        { type: 'mcq', q: "العلاقة بين البيانات والمعلومات هي أن المعلومات:", options: ["مادة أولية", "ناتج معالجة البيانات", "أقل قيمة", "غير منظمة"], a: "ناتج معالجة البيانات" },
+        { type: 'mcq', q: "المنطق اللي بيحاكي تفكير البشر في الاحتمالات يسمى:", options: ["منطق رياضي", "منطق ضبابي (Fuzzy)", "منطق رسمي", "لا شيء"], a: "منطق ضبابي (Fuzzy)" },
+        { type: 'mcq', q: "تقنية بتخلي الحواسيب تفهم العالم المرئي من الصور:", options: ["معالجة لغة", "الرؤية الحاسوبية", "الروبوتات", "التنقيب"], a: "الرؤية الحاسوبية" },
+        { type: 'mcq', q: "أداة ذكاء اصطناعي توليدي مشهورة:", options: ["Zotero", "ChatGPT", "Excel", "Word"], a: "ChatGPT" },
+        { type: 'mcq', q: "في البلوك تشين، بمجرد تسجيل البيانات:", options: ["سهل حذفها", "لا يمكن تغييرها", "تختفي فوراً", "تتعدل يومياً"], a: "لا يمكن تغييرها" },
+        { type: 'mcq', q: "من تحديات التحول الرقمي:", options: ["نقص المتخصصين", "زيادة الرواتب", "سهولة التعلم", "توفر الإنترنت"], a: "نقص المتخصصين" },
+        { type: 'mcq', q: "تطبيق تعليمي لتعلم اللغات:", options: ["Duolingo", "Spotify", "Netflix", "Uber"], a: "Duolingo" },
+        { type: 'mcq', q: "وحدة قياس بطارية الموبايل هي:", options: ["فولت", "ميللي أمبير (mAh)", "وات", "أوم"], a: "ميللي أمبير (mAh)" },
+        { type: 'mcq', q: "مهمة تكنولوجيا الاتصالات الأساسية هي:", options: ["تخزين البيانات", "الحفاظ على أنظمة الاتصال", "كتابة الأكواد", "تصميم الصور"], a: "الحفاظ على أنظمة الاتصال" },
+
+        // 20 أكمل (Completion) [cite: 13, 16, 21, 28]
+        { type: 'comp', q: "تعتبر الـ .... هي المادة الأولية التي تستخلص منها المعلومات.", a: "البيانات" },
+        { type: 'comp', q: "يتم الوصول لموارد الحوسبة السحابية عن طريق ....", a: "الإنترنت" },
+        { type: 'comp', q: "الجيل السادس 6G سيمكّن من إجراء العمليات الجراحية عن ....", a: "بعد" },
+        { type: 'comp', q: "يشير مصطلح IoT إلى إنترنت ....", a: "الأشياء" },
+        { type: 'comp', q: "الذكاء الاصطناعي التوليدي قادر على إنشاء .... جديد.", a: "محتوى" },
+        { type: 'comp', q: "تعتبر .... أكبر موسوعة مفتوحة على الإنترنت.", a: "ويكيبيديا" },
+        { type: 'comp', q: "نظام التشغيل الخاص بشركة آبل هو ....", a: "iOS" },
+        { type: 'comp', q: "الـ .... هو عقل الجهاز المسؤول عن السرعة والأداء.", a: "المعالج" },
+        { type: 'comp', q: "تعد .... أول خطوة في مراحل التحول الرقمي.", a: "الرقمنة" },
+        { type: 'comp', q: "من خصائص Big Data ضخامة الـ ....", a: "الحجم" },
+        { type: 'comp', q: "يعتمد البلوك تشين على شبكة .... إلى نظير.", a: "نظير" },
+        { type: 'comp', q: "الواقع .... يخلق بيئة محاكاة كاملة عبر الحاسوب.", a: "الافتراضي" },
+        { type: 'comp', q: "تحمي الأبعاد .... حقوق الأفراد في البيئة الرقمية.", a: "الأخلاقية" },
+        { type: 'comp', q: "تستخدم تقنية .... Pixel في كاميرات الموبايل لصور أدق.", a: "Dual" },
+        { type: 'comp', q: "خدمة جوجل للتخزين السحابي تسمى جوجل ....", a: "درايف" },
+        { type: 'comp', q: "الويب 2.0 أتاح للمستخدم أن يكون منتجاً للـ ....", a: "محتوى" },
+        { type: 'comp', q: "اختبار .... يستخدم للتفرقة بين الإنسان والآلة ذكياً.", a: "تيورنج" },
+        { type: 'comp', q: "الجيل الخامس 5G يتميز بتأخير أقل بكثير في .... البيانات.", a: "نقل" },
+        { type: 'comp', q: "من تطبيقات المنازل الذكية التحكم في .... عبر الهاتف.", a: "الإضاءة" },
+        { type: 'comp', q: "الحوسبة .... توفر موارد مرنة وقابلة للتوسع.", a: "السحابية" },
+
+        // 20 صح وغلط (T/F) [cite: 11, 13, 18, 22, 27]
+        { type: 'mcq', q: "تكنولوجيا المعلومات وتكنولوجيا الاتصالات هما نفس الشيء تماماً.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "البنية التحتية التقليدية مكلفة في الإعداد والصيانة.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "التحول الرقمي هو مجرد ميكنة للعمليات الورقية.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "البيانات الضخمة لا يمكن معالجتها بقواعد البيانات التقليدية.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "البلوك تشين يدار بشكل مركزي من قبل وسيط واحد.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "الواقع المعزز AR يبني على بيئة موجودة سابقاً ولا يخلق عالم افتراضي كامل.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "سرعة تحميل الـ 5G تصل لعشرات المرات أسرع من الـ 4G.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "حقوق النشر الرقمية لا تشمل البرمجيات والموسيقى.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "التعلم الآلي هو أحد فروع الذكاء الاصطناعي.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "تقنية IoT تقتصر فقط على أجهزة الكمبيوتر والهواتف.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "المعلومات هي الحلقة الوسطى بين البيانات والمعرفة.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "الشمول الرقمي يعني تصميم خدمات متاحة للجميع بدون تمييز.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "نظام الأندرويد تملكه شركة آبل.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "تعتبر سرعة النمو الهائل من خصائص البيانات الضخمة.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "الذكاء الاصطناعي يساعد في تقليل الضغوط النفسية عن البشر في المهام الشاقة.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "متاجر التطبيقات ظهرت لأول مرة سنة 2008.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "لا يمكن استخدام الموبايل في حجز تذاكر الطيران.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "الخصوصية تعني حق الأفراد في التحكم في بياناتهم الشخصية.", options: ["صح", "غلط"], a: "صح" },
+        { type: 'mcq', q: "6G تقنية قديمة وتم استبدالها بالـ 5G.", options: ["صح", "غلط"], a: "غلط" },
+        { type: 'mcq', q: "المعلومات تساعد أصحاب القرار على اتخاذ قرارات دقيقة.", options: ["صح", "غلط"], a: "صح" }
     ];
 
-    const quizContainer = document.getElementById('quiz-content');
+    let currentQ = 0;
+    let score = 0;
+    let timer;
+    let timeLeft = 30;
 
-    hardQuestions.forEach((item, index) => {
-        const block = document.createElement('div');
-        block.className = 'question-block';
-        block.innerHTML = `
-            <div class="q-text">
-                <span class="q-number">${index + 1}.</span> ${item.q}
-            </div>
-            <input type="text" class="input-area" placeholder="اكتب المصطلح هنا...">
-            <div class="answer-reveal" id="ans-${index}">
-                <span class="correct-term">${item.a}</span>
-                <span class="ref-page">مرجع: الكتاب صـ ${item.p}</span>
-                <div style="clear:both;"></div>
-            </div>
-        `;
-        quizContainer.appendChild(block);
-    });
+    function startQuiz() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        showQuestion();
+    }
 
-    function revealAnswers() {
-        const allAnswers = document.querySelectorAll('.answer-reveal');
-        allAnswers.forEach(div => {
-            div.style.display = 'block';
-            div.style.animation = 'fadeIn 0.5s';
-        });
-        
-        const btn = document.querySelector('button');
-        btn.innerText = "تم عرض الإجابات - راجع يا بطل";
-        btn.disabled = true;
-        btn.style.backgroundColor = "#455a64";
+    function showQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('q-num').innerText = currentQ + 1;
+        document.getElementById('question').innerText = q.q;
+        document.getElementById('feedback').classList.add('hidden');
+        resetTimer();
+
+        if (q.type === 'mcq') {
+            document.getElementById('mcq-options').classList.remove('hidden');
+            document.getElementById('completion-input').classList.add('hidden');
+            const optionsBox = document.getElementById('mcq-options');
+            optionsBox.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optionsBox.appendChild(btn);
+            });
+        } else {
+            document.getElementById('mcq-options').classList.add('hidden');
+            document.getElementById('completion-input').classList.remove('hidden');
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').focus();
+        }
+    }
+
+    function checkAnswer(ans) {
+        clearInterval(timer);
+        const correct = questions[currentQ].a;
+        if (ans === correct) {
+            score++;
+            showFeedback(true, "صح يا بطل! ✅");
+        } else {
+            showFeedback(false, `غلط للأسف. الإجابة الصح: ${correct} ❌`);
+        }
+    }
+
+    function checkCompletion() {
+        const userAns = document.getElementById('answer-input').value.trim();
+        checkAnswer(userAns);
+    }
+
+    function showFeedback(isCorrect, msg) {
+        const f = document.getElementById('feedback');
+        f.innerText = msg;
+        f.className = isCorrect ? 'correct' : 'wrong';
+        f.classList.remove('hidden');
+        document.getElementById('score').innerText = score;
+
+        setTimeout(() => {
+            currentQ++;
+            if (currentQ < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }, 2000);
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        timeLeft = 30;
+        document.getElementById('timer').innerText = timeLeft;
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                checkAnswer("وقت انتهى");
+            }
+        }, 1000);
+    }
+
+    function showResult() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
     }
 </script>
 
