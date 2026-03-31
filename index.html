@@ -34,26 +34,52 @@
         header p { margin-top: 0.5rem; font-size: 1.2rem; opacity: 0.9; }
         
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
+        
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 8px;
+            height: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
         .card {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 2rem;
-            margin-bottom: 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border-top: 4px solid var(--primary);
+            min-height: 300px;
         }
-        .question-title { font-weight: 700; font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary); }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 1rem;
+        }
+        .question-type { font-weight: 900; color: var(--secondary); font-size: 1.2rem;}
+        .question-counter { font-weight: bold; color: #64748b; }
+        
+        .question-title { font-weight: 700; font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--text); }
         
         .options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 1rem;
         }
-        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
         
         .option-label {
             display: flex;
@@ -63,10 +89,11 @@
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
         }
         .option-label:hover { border-color: var(--secondary); background: #eff6ff; }
-        .option-label input { margin-left: 10px; transform: scale(1.2); }
+        .option-label input { margin-left: 15px; transform: scale(1.3); }
         
         textarea {
             width: 100%;
@@ -74,35 +101,46 @@
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             resize: vertical;
-            min-height: 120px;
+            min-height: 150px;
             box-sizing: border-box;
         }
         textarea:focus { outline: none; border-color: var(--primary); }
         
-        .submit-btn {
+        .action-btn {
             display: block;
             width: 100%;
             padding: 1rem;
             background: var(--primary);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 900;
             font-family: 'Tajawal', sans-serif;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
             margin-top: 2rem;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
-        .submit-btn:hover { background: #1d4ed8; }
+        .action-btn:hover { background: #1d4ed8; }
+        .action-btn.next-mode { background: var(--success); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .action-btn.next-mode:hover { background: #059669; }
         
-        .result-section { display: none; margin-top: 1rem; padding: 1rem; border-radius: 8px; }
-        .correct-bg { background: #d1fae5; border-right: 4px solid var(--success); }
-        .wrong-bg { background: #fee2e2; border-right: 4px solid var(--danger); }
-        .model-answer { margin-top: 10px; font-weight: bold; color: var(--primary); }
+        .result-section { 
+            display: none; 
+            margin-top: 1.5rem; 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            font-size: 1.1rem;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .correct-bg { background: #d1fae5; border-right: 5px solid var(--success); color: #065f46;}
+        .wrong-bg { background: #fee2e2; border-right: 5px solid var(--danger); color: #991b1b;}
+        .model-answer { margin-top: 10px; font-weight: bold; color: var(--primary); background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #e2e8f0;}
         
         #scoreBoard {
             display: none;
@@ -111,51 +149,51 @@
             padding: 3rem;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
             border: 5px solid var(--primary);
         }
         #scoreBoard h2 { font-size: 3rem; color: var(--primary); margin: 0; }
         #scoreBoard p { font-size: 1.5rem; color: #475569; }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            color: var(--text);
-            margin: 3rem 0 1rem;
-            border-bottom: 3px solid var(--secondary);
-            display: inline-block;
-            padding-bottom: 0.5rem;
-        }
-        .text-center { text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>تحدي الخرائط الرقمية ونظم المعلومات الجغرافية</h1>
-    <p>أعد هذا الاختبار خصيصاً لك يا رِفْعَت - جاهز للتحدي؟</p>
+    <h1>تحدي الخرائط الرقمية</h1>
+    <p>تدريب خطوة بخطوة يا رِفْعَت - ركز في كل سؤال</p>
 </header>
 
 <div class="container">
+    <div id="quizApp">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="card" id="questionCard">
+            <div class="question-header">
+                <span class="question-type" id="qType">اختيار من متعدد</span>
+                <span class="question-counter" id="qCounter">سؤال 1 من 70</span>
+            </div>
+            
+            <div class="question-title" id="qTitle"></div>
+            
+            <div id="inputArea">
+                </div>
+            
+            <div class="result-section" id="feedbackArea"></div>
+            
+            <button class="action-btn" id="actionBtn" onclick="handleAction()">تأكيد الإجابة</button>
+        </div>
+    </div>
+
     <div id="scoreBoard">
         <h2 id="finalScoreText"></h2>
         <p id="motivationText"></p>
-        <button class="submit-btn" onclick="location.reload()" style="width:50%; margin: 2rem auto 0;">جرب تاني</button>
+        <button class="action-btn" onclick="location.reload()" style="width:50%; margin: 2rem auto 0;">جرب تاني</button>
     </div>
-
-    <form id="quizForm">
-        <div class="text-center"><h2 class="section-title">أولاً: أسئلة الاختيار من متعدد (50 سؤال)</h2></div>
-        <div id="mcqContainer"></div>
-
-        <div class="text-center"><h2 class="section-title">ثانياً: الأسئلة المقالية (20 سؤال)</h2></div>
-        <div id="essayContainer"></div>
-
-        <button type="button" class="submit-btn" onclick="submitQuiz()">سلم الإجابات وشوف النتيجة</button>
-    </form>
 </div>
 
 <script>
-// بيانات الأسئلة الاختيارية (50 سؤال معقدين ومستوحين بدقة من المحاضرات)
+// البيانات (نفس الـ 70 سؤال)
 const mcqs = [
 {q:"أول من رسم خريطة للعالم توضح حدود الأرض والبحار وجعل العالم قرص مستدير يحيط به المحيط هو:", options:["هيرودوت","أنكز مندر","بطليموس","استرابو"], answer:1, exp:"أنكز مندر هو أول جغرافي وضع خريطة توضح حدود الأرض والبحار كقرص مستدير."},
 {q:"العالم الذي جعل البحر المتوسط يتصل بالبحر الخارجي عن طريق مضيق جبل طارق في خريطته هو:", options:["إيراتوستين","هيكاتيوس","هيرودوت","مركيتور"], answer:2, exp:"هيرودوت هو أول من ذكر هذه الحقائق العلمية وجعل خريطته مستطيلة."},
@@ -209,139 +247,189 @@ const mcqs = [
 {q:"المعادلة التي تطبق على جدول البيانات لإظهار نتائج بلون مميز في الـ GIS تعرف بـ:", options:["الاستفسار (Query)","الاستعلام (Identify)","الإخراج (Output)","القياس (Measurement)"], answer:0, exp:"الـ Query يبحث في الجداول ويحدد المعالم المطابقة للشروط."}
 ];
 
-// بيانات الأسئلة المقالية (20 سؤال بإجاباتها النموذجية والكلمات المفتاحية للتصحيح التلقائي)
 const essays = [
-{q:"ما هو الفرق الجوهري بين الخريطة الرقمية ونظم المعلومات الجغرافية (GIS)؟", keywords:["تحليل","معالجة","اداة","تحديث","معلومات جديدة"], model:"الخريطة الرقمية هي الأداة الرئيسية (المنتج المرئي) وتكتفي بعرض البيانات، بينما نظم المعلومات الجغرافية (GIS) هو النظام الشامل الذي يقوم بتحديث ومعالجة وتحليل هذه البيانات المكانية والوصفية لإنتاج معلومات جديدة تساعد في اتخاذ القرار."},
-{q:"وضح دور الطبيب الإنجليزي جون سنو في تطور الفكر الكارتوجرافي.", keywords:["كوليرا","مياه","ملوثة","ربط","بيانات"], model:"في عام 1854 قام برسم خريطة لانتشار مرض الكوليرا في لندن ووقع عليها مصادر المياه الملوثة، واكتشف العلاقة المكانية بينها وبين المرض، مما يعد أول فكرة لربط الخريطة بالبيانات الوصفية للتحليل."},
-{q:"اذكر ثلاثة من خصائص الخرائط الرقمية التي تميزها عن الخرائط الورقية.", keywords:["مرونة","طبقات","تحديث","قياس","توجيه","تلف"], model:"1. المرونة (التعامل بنظام الطبقات Layers). 2. إمكانية وسهولة التحديث الإلكتروني. 3. الخريطة الرقمية غير قابلة للتلف. 4. دقة وسهولة قياس المسافات والمساحات آلياً. 5. إمكانية تحويل المساقط بسهولة."},
-{q:"ما المقصود بـ الحرم المكاني (Buffer) في نظم المعلومات الجغرافية؟", keywords:["نطاق","ظاهرة","منطقة","تأثير","مساحية"], model:"هو إجراء تحليلي يقوم على تحديد نطاق (منطقة تأثير) حول ظاهرة جغرافية معينة، سواء كانت هذه الظاهرة نقطية، خطية، أو مساحية."},
-{q:"كيف تساهم نظم المعلومات الجغرافية في إدارة الأزمات والكوارث؟", keywords:["شبكات","مسارات","زلازل","فيضانات","طوارئ","إنقاذ"], model:"تساهم من خلال تحليل شبكات الطرق لتحديد أقصر وأنسب المسارات لفرق الإنقاذ، وتحديد إحداثيات الكوارث (كالفيضانات والزلازل) بدقة لسرعة التوجيه وإدارة الكارثة وتقليل الوقت والجهد."},
-{q:"ما هو نموذج الارتفاع الرقمي (DEM) وفيما يستخدم؟", keywords:["ثلاثي الابعاد","3d","انحدار","سيول","ارتفاع","شبكية"], model:"هو تحويل البيانات الشبكية التي تضم الإحداثيات والارتفاعات إلى نموذج ثلاثي الأبعاد لسطح الأرض، ويستخدم في حساب الانحدارات، التحليل الهيدرولوجي، وتحديد أشكال مخرات السيول واتجاهات الميول."},
-{q:"قارن بين الاستعلام (Identify) والاستفسار (Query) في الـ GIS.", keywords:["نقر","شروط","معادلة","شرطية"], model:"الاستعلام (Identify): هو استرجاع بيانات معلم معين بمجرد النقر عليه بالماوس ليظهر في نافذة. أما الاستفسار (Query): فهو كتابة معادلة رياضية/منطقية بشروط محددة ليقوم البرنامج بتطبيقها على الجدول وتحديد كل المعالم التي تطابق الشرط."},
-{q:"ما دور العالم المسلم الإدريسي في تطور الخرائط؟", keywords:["الوان","جنوب","روجر","اقاليم"], model:"رسم خريطة للعالم عام 1154م للملك روجر الثاني، قسم فيها العالم لـ 70 قسماً (7 أقاليم كل منها 10 خرائط). التزم بمقياس الرسم واستخدم الألوان ببراعة (الأزرق للبحار والأخضر للأنهار)، وكانت خريطته موجهة نحو الجنوب."},
-{q:"اذكر الخطوات (المراحل) الخمس الرئيسية لإنتاج الخريطة الآلية.", keywords:["ارجاع","قواعد","ترقيم","ترميز","اخراج","طباعة"], model:"1. الإرجاع الجغرافي (Georeferencing). 2. بناء قواعد البيانات الجغرافية وإنشاء الطبقات. 3. مرحلة الترقيم والإعداد (Digitizing & Editing). 4. الترميز الكارتوجرافي (Symbology). 5. الإخراج والطباعة (Layout)."},
-{q:"بم تفسر: نهضة الخرائط في هولندا في القرن السابع عشر وبروز دور العالم مركياتور؟", keywords:["طباعة","ملاحة","مستعمرات","بحرية","مسقط"], model:"بسبب ظهور هولندا كقوة بحرية وتجارية عظمى وتكوينها لمستعمرات مما وفر معلومات جغرافية دقيقة، وتوسعهم في تقنيات الطباعة. ويعتبر مركياتور أعظم أعلامها بابتكاره لمسقطه الشهير وإصداره أول أطلس عام 1585."},
-{q:"ما هي الخرائط الموضوعية الرقمية (Thematic Maps)؟", keywords:["ظاهرة","اطار","توزيع","محدد"], model:"هي خرائط رقمية تختص بتوزيع ومعالجة بيانات ظاهرة محددة (مثل الكثافة السكانية أو المحاصيل الزراعية) داخل إطار مكاني محدد باستخدام برامج الـ GIS."},
-{q:"كيف يستخدم الذكاء الاصطناعي (AI) حالياً في تطوير الخرائط والبيانات المكانية؟", keywords:["تحليل","ضخمة","تنبؤ","تغيرات","مناخ","انماط"], model:"يستخدم في تحليل كميات ضخمة من البيانات المكانية بسرعة لاكتشاف الأنماط، والتنبؤ بالتغيرات الجغرافية المستقبلية مثل التغيرات المناخية وانتشار الأوبئة بدقة عالية."},
-{q:"ما المقصود بعملية الاشتقاق (Extraction) في نظم المعلومات الجغرافية؟", keywords:["قاعدة","بيانات","استقطاع","جديدة"], model:"هي عملية إنشاء قاعدة بيانات مكانية جديدة (طبقة جديدة) من خلال اشتقاقها أو استقطاعها من قاعدة بيانات أشمل، مثل اشتقاق مناطق الأراضي الزراعية من خريطة استخدامات الأرض العامة."},
-{q:"اذكر الفرق بين البيانات الخطية (Vector) والبيانات الشبكية (Raster).", keywords:["نقاط","خطوط","مساحات","خلايا","بيكسل","صور"], model:"البيانات الخطية (Vector) تمثل المعالم في شكل نقاط، خطوط، ومساحات (مضلعات) ولها دقة عالية في الرسم. بينما البيانات الشبكية (Raster) تمثل المعالم في شكل مصفوفة من الخلايا أو البيكسلز (مثل الصور الجوية والفضائية)."},
-{q:"كيف يفيد نظام المعلومات الجغرافي في مجال التخطيط العمراني؟", keywords:["عشوائيات","نمو","خدمات","مقارنة","مخطط"], model:"يفيد في تقييم أداء الخدمات وإعادة توزيعها في المناطق المحرومة، مقارنة المخطط بالواقع لتحديد المسئوليات، وبناء نماذج رياضية لتحديد اتجاهات النمو العمراني للحد من العشوائيات."},
-{q:"اشرح أهمية المحاكاة (Simulation) في تطبيقات نظم المعلومات الجغرافية.", keywords:["تتبع","تأثير","طوارئ","مستقبل","توقع"], model:"تساعد المحاكاة في توقع ورؤية سيناريوهات مستقبلية للظواهر (مثل ارتفاع منسوب مياه الفيضان أو الزحام المروري)، مما يسهل دراسة تأثيرها وتحديد الأماكن المتضررة لوضع خطط طوارئ وإخلاء استباقية."},
-{q:"لماذا لم يترك قدماء المصريين خرائط عالمية مثل العراقيين القدماء رغم تفوقهم في المساحة؟", keywords:["بردي","تلف","عملية","ضرائب","فلسفة"], model:"لأن المصريين ركزوا على الخرائط الكادسترالية (التفصيلية) العملية لقياس الأراضي الزراعية وحساب الضرائب بعد فيضان النيل، كما أنهم رسموا خرائطهم على ورق البردي الذي هو أقل تحملاً ويتلف بسرعة مقارنة بألواح الطين البابلية."},
-{q:"ما هي أهمية الأجزاء الصلبة (Hardware) كمتطلب لإنتاج الخريطة الآلية؟", keywords:["معالجة","تخزين","سرعة","معالج"], model:"تعد إمكانيات الحاسب من سعة التخزين (Storage) وسرعة المعالج (CPU) محددات أساسية لعملية التنفيذ، لأنها تؤثر مباشرة على سرعة إدخال البيانات الضخمة والمعالجات المكانية المعقدة التي تقوم بها البرامج."},
-{q:"تعتبر عملية (الاختيار الأمثل - Optimum Selection) من أهم وظائف GIS، وضح بمثال.", keywords:["معايير","شروط","تسويق","مواقع"], model:"هي عملية اختيار أفضل موقع بناءً على معايير محددة. مثال: اختيار أفضل موقع لإنشاء مدرسة بحيث يكون بعيداً عن الطرق السريعة ومجاري المياه، أو اختيار موقع لفرع شركة ليكون قريباً من التجمعات السكنية."},
-{q:"ما هو دور جاك دنجر موند (Jack Dangermond) في تاريخ الـ GIS؟", keywords:["شركة","ايزري","esri","arcinfo","برمجيات"], model:"أسس في عام 1969 شركة إيزري (ESRI) لمعهد أبحاث النظم البيئية، والتي طورت لاحقاً أقوى برمجيات الـ GIS مثل إطلاق برنامج ArcInfo عام 1982، مما ساهم في النقلة التجارية والتقنية للنظم الجغرافية."}
+{q:"ما هو الفرق الجوهري بين الخريطة الرقمية ونظم المعلومات الجغرافية (GIS)؟", keywords:["تحليل","معالجة","اداة","تحديث","معلومات جديدة"], model:"الخريطة الرقمية هي الأداة الرئيسية وتكتفي بعرض البيانات، بينما نظم المعلومات الجغرافية (GIS) هو النظام الشامل الذي يقوم بتحديث ومعالجة وتحليل البيانات لإنتاج معلومات جديدة."},
+{q:"وضح دور الطبيب الإنجليزي جون سنو في تطور الفكر الكارتوجرافي.", keywords:["كوليرا","مياه","ملوثة","ربط","بيانات"], model:"في عام 1854 رسم خريطة لانتشار مرض الكوليرا في لندن ووقع مصادر المياه الملوثة، واكتشف العلاقة المكانية بينها، وهو أول ربط بين الخريطة والبيانات."},
+{q:"اذكر ثلاثة من خصائص الخرائط الرقمية التي تميزها عن الخرائط الورقية.", keywords:["مرونة","طبقات","تحديث","قياس","توجيه","تلف"], model:"المرونة (الطبقات)، إمكانية التحديث الإلكتروني، غير قابلة للتلف، سهولة القياس آلياً، إمكانية تحويل المساقط."},
+{q:"ما المقصود بـ الحرم المكاني (Buffer) في نظم المعلومات الجغرافية؟", keywords:["نطاق","ظاهرة","منطقة","تأثير","مساحية"], model:"تحديد نطاق (منطقة تأثير) حول ظاهرة جغرافية معينة، سواء كانت نقطية أو خطية أو مساحية."},
+{q:"كيف تساهم نظم المعلومات الجغرافية في إدارة الأزمات والكوارث؟", keywords:["شبكات","مسارات","زلازل","فيضانات","طوارئ","إنقاذ"], model:"بتحليل شبكات الطرق لتحديد أقصر المسارات لفرق الإنقاذ، وتحديد إحداثيات الكوارث بدقة لإدارتها بسرعة."},
+{q:"ما هو نموذج الارتفاع الرقمي (DEM) وفيما يستخدم؟", keywords:["ثلاثي الابعاد","3d","انحدار","سيول","ارتفاع","شبكية"], model:"نموذج ثلاثي الأبعاد لسطح الأرض يعتمد على بيانات شبكية، ويستخدم في حساب الانحدارات وتحليل مخرات السيول."},
+{q:"قارن بين الاستعلام (Identify) والاستفسار (Query) في الـ GIS.", keywords:["نقر","شروط","معادلة","شرطية"], model:"الاستعلام: استرجاع بيانات بالنقر على المعلم. الاستفسار: كتابة معادلة بشروط ليحدد البرنامج المعالم المطابقة."},
+{q:"ما دور العالم المسلم الإدريسي في تطور الخرائط؟", keywords:["الوان","جنوب","روجر","اقاليم"], model:"رسم خريطة للعالم مقسمة لـ 70 قسماً، استخدم الألوان، وكانت خريطته موجهة نحو الجنوب."},
+{q:"اذكر الخطوات (المراحل) الخمس الرئيسية لإنتاج الخريطة الآلية.", keywords:["ارجاع","قواعد","ترقيم","ترميز","اخراج","طباعة"], model:"1. الإرجاع الجغرافي 2. بناء قواعد البيانات 3. الترقيم 4. الترميز الكارتوجرافي 5. الإخراج والطباعة."},
+{q:"بم تفسر: نهضة الخرائط في هولندا في القرن السابع عشر وبروز دور العالم مركياتور؟", keywords:["طباعة","ملاحة","مستعمرات","بحرية","مسقط"], model:"بسبب قوتها البحرية والمستعمرات، ومركياتور هو أعظم أعلامها بابتكاره لمسقطه وإصداره أول أطلس."},
+{q:"ما هي الخرائط الموضوعية الرقمية (Thematic Maps)؟", keywords:["ظاهرة","اطار","توزيع","محدد"], model:"خرائط رقمية تختص بتوزيع ومعالجة بيانات ظاهرة محددة داخل إطار مكاني محدد."},
+{q:"كيف يستخدم الذكاء الاصطناعي (AI) حالياً في تطوير الخرائط؟", keywords:["تحليل","ضخمة","تنبؤ","تغيرات","مناخ","انماط"], model:"لتحليل بيانات مكانية ضخمة بسرعة لاكتشاف الأنماط والتنبؤ بالتغيرات مثل المناخ أو الأوبئة."},
+{q:"ما المقصود بعملية الاشتقاق (Extraction) في نظم المعلومات الجغرافية؟", keywords:["قاعدة","بيانات","استقطاع","جديدة"], model:"إنشاء قاعدة بيانات جديدة باستقطاعها من قاعدة أشمل."},
+{q:"اذكر الفرق بين البيانات الخطية (Vector) والبيانات الشبكية (Raster).", keywords:["نقاط","خطوط","مساحات","خلايا","بيكسل","صور"], model:"الخطية تمثل بنقاط وخطوط ومساحات بدقة، الشبكية مصفوفة خلايا/بيكسلز مثل الصور الجوية."},
+{q:"كيف يفيد نظام المعلومات الجغرافي في مجال التخطيط العمراني؟", keywords:["عشوائيات","نمو","خدمات","مقارنة","مخطط"], model:"تقييم الخدمات، مقارنة المخطط بالواقع، وتحديد اتجاهات النمو للحد من العشوائيات."},
+{q:"اشرح أهمية المحاكاة (Simulation) في تطبيقات الـ GIS.", keywords:["تتبع","تأثير","طوارئ","مستقبل","توقع"], model:"توقع سيناريوهات مستقبلية (مثل الفيضان) لدراسة التأثير ووضع خطط طوارئ."},
+{q:"لماذا لم يترك قدماء المصريين خرائط عالمية مثل العراقيين القدماء؟", keywords:["بردي","تلف","عملية","ضرائب","فلسفة"], model:"لأنهم ركزوا على الخرائط التفصيلية العملية لقياس الأراضي للضرائب، ورسموها على البردي القابل للتلف."},
+{q:"ما هي أهمية الأجزاء الصلبة (Hardware) كمتطلب لإنتاج الخريطة الآلية؟", keywords:["معالجة","تخزين","سرعة","معالج"], model:"سعة التخزين وسرعة المعالج تؤثر مباشرة على سرعة إدخال البيانات والمعالجات المكانية المعقدة."},
+{q:"تعتبر عملية (الاختيار الأمثل - Optimum Selection) من أهم وظائف GIS، وضح بمثال.", keywords:["معايير","شروط","تسويق","مواقع"], model:"اختيار أفضل موقع بناءً على معايير، مثل اختيار موقع مدرسة بعيداً عن الطرق السريعة والمياه."},
+{q:"ما هو دور جاك دنجر موند (Jack Dangermond) في تاريخ الـ GIS؟", keywords:["شركة","ايزري","esri","arcinfo","برمجيات"], model:"أسس شركة إيزري (ESRI) عام 1969 التي طورت أقوى برمجيات الـ GIS مثل ArcInfo."}
 ];
 
-// دالة خلط المصفوفة (عشان الأسئلة تبقى عشوائية لو حبيت، بس هنا هنعرضهم بالترتيب زي ما طلبت)
-function renderQuiz() {
-    const mcqContainer = document.getElementById('mcqContainer');
-    const essayContainer = document.getElementById('essayContainer');
-    
-    // رسم الاختياري
-    let mcqHTML = '';
-    mcqs.forEach((q, index) => {
-        mcqHTML += `
-            <div class="card" id="mcqCard_${index}">
-                <div class="question-title">س ${index + 1}: ${q.q}</div>
-                <div class="options-grid">
-                    ${q.options.map((opt, i) => `
-                        <label class="option-label">
-                            <input type="radio" name="mcq_${index}" value="${i}">
-                            ${opt}
-                        </label>
-                    `).join('')}
-                </div>
-                <div class="result-section" id="mcqRes_${index}"></div>
-            </div>
-        `;
-    });
-    mcqContainer.innerHTML = mcqHTML;
+const allQuestions = [...mcqs, ...essays];
+const totalQuestions = allQuestions.length;
 
-    // رسم المقالي
-    let essayHTML = '';
-    essays.forEach((q, index) => {
-        essayHTML += `
-            <div class="card" id="essayCard_${index}">
-                <div class="question-title">س ${index + 1}: ${q.q}</div>
-                <textarea id="essay_${index}" placeholder="اكتب إجابتك هنا يا بطل..."></textarea>
-                <div class="result-section" id="essayRes_${index}"></div>
-            </div>
-        `;
-    });
-    essayContainer.innerHTML = essayHTML;
+let currentIndex = 0;
+let currentScore = 0;
+let isAnswerChecked = false; // عشان نعرف إحنا في مرحلة التأكيد ولا النقل للسؤال اللي بعده
+
+// عناصر الـ DOM
+const qCounter = document.getElementById('qCounter');
+const qType = document.getElementById('qType');
+const qTitle = document.getElementById('qTitle');
+const inputArea = document.getElementById('inputArea');
+const feedbackArea = document.getElementById('feedbackArea');
+const actionBtn = document.getElementById('actionBtn');
+const progressFill = document.getElementById('progressFill');
+
+function renderCurrentQuestion() {
+    isAnswerChecked = false;
+    feedbackArea.style.display = 'none';
+    feedbackArea.className = 'result-section';
+    actionBtn.innerText = 'تأكيد الإجابة';
+    actionBtn.classList.remove('next-mode');
+    
+    // تحديث شريط التقدم والعداد
+    let perc = (currentIndex / totalQuestions) * 100;
+    progressFill.style.width = `${perc}%`;
+    qCounter.innerText = `سؤال ${currentIndex + 1} من ${totalQuestions}`;
+    
+    const qData = allQuestions[currentIndex];
+    qTitle.innerText = qData.q;
+    inputArea.innerHTML = '';
+    
+    if (currentIndex < 50) {
+        // سؤال اختياري
+        qType.innerText = 'اختيار من متعدد';
+        let optionsHtml = '<div class="options-grid">';
+        qData.options.forEach((opt, i) => {
+            optionsHtml += `
+                <label class="option-label" id="label_${i}">
+                    <input type="radio" name="currentAnswer" value="${i}">
+                    ${opt}
+                </label>`;
+        });
+        optionsHtml += '</div>';
+        inputArea.innerHTML = optionsHtml;
+    } else {
+        // سؤال مقالي
+        qType.innerText = 'سؤال مقالي';
+        inputArea.innerHTML = `<textarea id="essayInput" placeholder="اكتب إجابتك هنا يا بطل..."></textarea>`;
+    }
 }
 
-function submitQuiz() {
-    let score = 0;
-    const totalScore = mcqs.length + essays.length; // 50 + 20 = 70
-
-    // تصحيح الاختياري
-    mcqs.forEach((q, index) => {
-        const selected = document.querySelector(`input[name="mcq_${index}"]:checked`);
-        const resDiv = document.getElementById(`mcqRes_${index}`);
-        resDiv.style.display = 'block';
-        
-        if (selected && parseInt(selected.value) === q.answer) {
-            score++;
-            resDiv.className = 'result-section correct-bg';
-            resDiv.innerHTML = `<strong>عاش! إجابة صحيحة.</strong><br><em>التوضيح: ${q.exp}</em>`;
+function handleAction() {
+    if (!isAnswerChecked) {
+        // مرحلة التأكيد والتصحيح
+        checkAnswer();
+    } else {
+        // مرحلة النقل للسؤال اللي بعده
+        currentIndex++;
+        if (currentIndex < totalQuestions) {
+            renderCurrentQuestion();
         } else {
-            resDiv.className = 'result-section wrong-bg';
-            resDiv.innerHTML = `<strong>للأسف غلط!</strong> الإجابة الصح هي: <span style="color:var(--danger)">${q.options[q.answer]}</span><br><em>التوضيح: ${q.exp}</em>`;
+            showFinalScore();
         }
-        // تعطيل الراديو
-        document.getElementsByName(`mcq_${index}`).forEach(el => el.disabled = true);
-    });
+    }
+}
 
-    // تصحيح المقالي (بناءً على الكلمات المفتاحية)
-    essays.forEach((q, index) => {
-        const userAnswer = document.getElementById(`essay_${index}`).value.toLowerCase();
-        const resDiv = document.getElementById(`essayRes_${index}`);
-        resDiv.style.display = 'block';
+function checkAnswer() {
+    const qData = allQuestions[currentIndex];
+    feedbackArea.style.display = 'block';
+    let isCorrect = false;
+    
+    if (currentIndex < 50) {
+        // تصحيح الاختياري
+        const selected = document.querySelector('input[name="currentAnswer"]:checked');
+        if (!selected) {
+            alert('اختار إجابة الأول يا رِفْعَت!');
+            feedbackArea.style.display = 'none';
+            return;
+        }
+        
+        // تعطيل الراديو
+        document.querySelectorAll('input[name="currentAnswer"]').forEach(el => el.disabled = true);
+        
+        const userVal = parseInt(selected.value);
+        if (userVal === qData.answer) {
+            isCorrect = true;
+            currentScore++;
+            feedbackArea.className = 'result-section correct-bg';
+            feedbackArea.innerHTML = `<strong>عاش! إجابتك صحيحة.</strong><br><em>التوضيح: ${qData.exp}</em>`;
+        } else {
+            feedbackArea.className = 'result-section wrong-bg';
+            feedbackArea.innerHTML = `<strong>للأسف غلط!</strong> الإجابة الصح هي: <strong>${qData.options[qData.answer]}</strong><br><em>التوضيح: ${qData.exp}</em>`;
+            // تلوين الاختيار الصح بالأخضر الخفيف
+            document.getElementById(`label_${qData.answer}`).style.borderColor = "var(--success)";
+            document.getElementById(`label_${qData.answer}`).style.backgroundColor = "#ecfdf5";
+        }
+    } else {
+        // تصحيح المقالي
+        const userInputBox = document.getElementById('essayInput');
+        const userVal = userInputBox.value.toLowerCase().trim();
+        
+        if (userVal === '') {
+            alert('اكتب أي إجابة الأول يا رِفْعَت!');
+            feedbackArea.style.display = 'none';
+            return;
+        }
+        
+        userInputBox.disabled = true;
         
         let matchCount = 0;
-        q.keywords.forEach(kw => {
-            if (userAnswer.includes(kw)) matchCount++;
+        qData.keywords.forEach(kw => {
+            if (userVal.includes(kw)) matchCount++;
         });
 
-        // لو جاب 30% من الكلمات المفتاحية على الأقل أو لو كتب كلام كتير قريب
-        if (matchCount >= Math.max(1, Math.floor(q.keywords.length * 0.3))) {
-            score++;
-            resDiv.className = 'result-section correct-bg';
-            resDiv.innerHTML = `<strong>ممتاز! الإجابة قريبة جداً أو صحيحة.</strong><br><div class="model-answer">الإجابة النموذجية:<br>${q.model}</div>`;
+        // ناجح لو جاب جزء من الكلمات المفتاحية
+        if (matchCount >= Math.max(1, Math.floor(qData.keywords.length * 0.3))) {
+            isCorrect = true;
+            currentScore++;
+            feedbackArea.className = 'result-section correct-bg';
+            feedbackArea.innerHTML = `<strong>ممتاز! كلامك في الصميم أو قريب جداً من الصح.</strong><br><div class="model-answer">الإجابة النموذجية:<br>${qData.model}</div>`;
         } else {
-            resDiv.className = 'result-section wrong-bg';
-            resDiv.innerHTML = `<strong>إجابتك ناقصة أو غير دقيقة.</strong><br><div class="model-answer">الإجابة النموذجية الصح هي:<br>${q.model}</div>`;
+            feedbackArea.className = 'result-section wrong-bg';
+            feedbackArea.innerHTML = `<strong>إجابتك بعيدة شوية عن المطلوب أو ناقصة.</strong><br><div class="model-answer">الإجابة النموذجية الصح هي:<br>${qData.model}</div>`;
         }
-        document.getElementById(`essay_${index}`).disabled = true;
-    });
+    }
+    
+    // تحويل الزرار للمرحلة التانية
+    isAnswerChecked = true;
+    if (currentIndex === totalQuestions - 1) {
+        actionBtn.innerText = 'أظهر النتيجة النهائية';
+    } else {
+        actionBtn.innerText = 'السؤال اللي بعده';
+    }
+    actionBtn.classList.add('next-mode');
+}
 
-    // إظهار النتيجة النهائية
+function showFinalScore() {
+    document.getElementById('quizApp').style.display = 'none';
     const scoreBoard = document.getElementById('scoreBoard');
     const finalScoreText = document.getElementById('finalScoreText');
     const motivationText = document.getElementById('motivationText');
     
     scoreBoard.style.display = 'block';
-    finalScoreText.innerText = `جبت ${score} من ${totalScore}`;
+    finalScoreText.innerText = `جبت ${currentScore} من ${totalQuestions}`;
     
-    let perc = (score / totalScore) * 100;
+    let perc = (currentScore / totalQuestions) * 100;
     if(perc >= 90) {
         motivationText.innerText = 'عاش يا رِفْعَت! أسطورة نظم المعلومات الجغرافية 🌍🔥';
     } else if(perc >= 70) {
-        motivationText.innerText = 'بطل! مستوى ممتاز جداً، راجع بس على الغلطات البسيطة دي 👏';
+        motivationText.innerText = 'بطل! مستوى ممتاز جداً، مجهودك واضح 👏';
     } else if(perc >= 50) {
         motivationText.innerText = 'حلو، بس أنا عارف إنك تقدر تجيب أعلى من كده، راجع المحاضرات وجرب تاني 💪';
     } else {
-        motivationText.innerText = 'محتاجين نركز شوية يا صاحبي، اقرأ التوضيحات وشد حيلك المرة الجاية 📚';
+        motivationText.innerText = 'محتاجين نركز شوية يا صاحبي، اقرأ التوضيحات كويس وشد حيلك المرة الجاية 📚';
     }
-
-    // عمل Scroll ناعم للنتيجة فوق
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// تشغيل الدالة عند تحميل الصفحة
-window.onload = renderQuiz;
+// تشغيل أول سؤال لما الصفحة تفتح
+window.onload = renderCurrentQuestion;
 </script>
 
 </body>
